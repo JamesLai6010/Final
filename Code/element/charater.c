@@ -5,13 +5,19 @@
 #include "../algif5/src/algif.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include "floor.h"
+
+#define true 1
+#define false 0
 
 #define GRAVITY 1        //跳躍重力和跳躍高度
-#define JUMP_STRENGTH -15 
+#define JUMP_STRENGTH -20
 
 /*
    [Character function]
 */
+void Character_on_Floor(Elements *self);
+
 Elements *New_Character(int label)
 {
     Character *pDerivedObj = (Character *)malloc(sizeof(Character));
@@ -34,7 +40,7 @@ Elements *New_Character(int label)
     // initial the geometric information of character
     pDerivedObj->width = pDerivedObj->gif_status[0]->width;
     pDerivedObj->height = pDerivedObj->gif_status[0]->height;
-    pDerivedObj->x = 300;
+    pDerivedObj->x = 0;
     pDerivedObj->y = HEIGHT - pDerivedObj->height - 60; // 假設地面高度為 HEIGHT - 60
     pDerivedObj->hitbox = New_Rectangle(pDerivedObj->x,
                                         pDerivedObj->y,
@@ -55,6 +61,9 @@ Elements *New_Character(int label)
     return pObj;
 }
 
+int on_floor = 1;  //在地上與否
+int stop_y;
+int map_data[6][6];
 
 void Character_update(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
@@ -62,7 +71,9 @@ void Character_update(Elements *self) {
     if (chara->is_jumping) {
         chara->jump_speed += GRAVITY;
         _Character_update_position(self, 0, chara->jump_speed);
-        if (chara->y + chara->height >= HEIGHT - 60) { // 地面目前是人身高-60後續要跟著改
+        Character_on_Floor(self);  //去算地面高度
+        printf("%d",stop_y); //地面y高度
+        if (chara->y + chara->height >= HEIGHT - 60) {
             chara->y = HEIGHT - chara->height - 60;
             chara->is_jumping = false;
             chara->state = STOP;
@@ -145,6 +156,8 @@ void _Character_update_position(Elements *self, int dx, int dy) {
     hitbox->update_center_y(hitbox, dy);
 }
 
+
+
 void Character_interact(Elements *self, Elements *tar) {
     Character *chara = (Character *)(self->pDerivedObj);
     if (tar->label == Floor_L) {
@@ -155,4 +168,56 @@ void Character_interact(Elements *self, Elements *tar) {
             chara->state = STOP;
         }
     }
+}
+
+
+//讀取地面高度，要傳到floor_interact和charater_update
+void Character_on_Floor(Elements *self) {
+    Character *chara = (Character *)(self->pDerivedObj);
+    //後面改為每換地圖再讀一次就好
+    FILE *data;
+    data = fopen("assets/map/gamescene_map.txt", "r");
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < 6; j++)
+        {
+            fscanf(data, "%d", &map_data[i][j]);
+        }
+    }
+    fclose(data);
+
+    int floor_y[100];  //紀錄floor_y[第幾直排] = 有地板的橫排
+
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < 6; j++)
+        {
+            if (map_data[j][i] == 1) floor_y[i] = j;
+        }
+    }
+
+    int per_width = 900/6;
+    int per_height = 672/6;
+    int Y = chara->y + chara->height;  //角色腳底的y
+    int X = chara->x + chara->width;  //角色右下角的x
+    if (X/per_width <= 1) {   //在第一行
+        on_floor = 1;
+        stop_y = floor_y[1]*per_height;
+    } else if (X/per_width <= 2 || X/per_width > 1) {
+        on_floor = 1;
+        stop_y = floor_y[2]*per_height;
+    } else if (X/per_width <= 3 || X/per_width > 2) {
+        on_floor = 1;
+        stop_y = floor_y[3]*per_height;
+    } else if (X/per_width <= 4 || X/per_width > 3) {
+        on_floor = 1;
+        stop_y = floor_y[4]*per_height;
+    } else if (X/per_width <= 5 || X/per_width > 4) {
+        on_floor = 1;
+        stop_y = floor_y[5]*per_height;
+    } else if (X/per_width <= 6 || X/per_width > 5) {
+        on_floor = 1;
+        stop_y = floor_y[6]*per_height;
+    } else on_floor = 0;
+    return;
 }

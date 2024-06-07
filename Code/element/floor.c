@@ -45,16 +45,19 @@ void Floor_interact(Elements *self, Elements *tar)
         Character *chara = (Character *)(tar->pDerivedObj);
         int right_limit = WIDTH - chara->width / 2;
         int left_limit = 0 - chara->width / 2;
+
+        // 檢查角色是否超出左右邊界
         if (chara->x < left_limit)
         {
-            _Character_update_position(tar, (left_limit - chara->x), 0);
+            _Character_update_position(tar, right_limit - left_limit, 0); // 從左邊邊界移動到右邊邊界
         }
         else if (chara->x > right_limit)
         {
-            _Character_update_position(tar, (right_limit - chara->x), 0);
+            _Character_update_position(tar, left_limit - right_limit, 0); // 從右邊邊界移動到左邊邊界
         }
-        // Check if character has landed
-        if (chara->y + chara->height >= HEIGHT - 60) // Assuming ground is at HEIGHT - 60
+
+        // 檢查角色是否落地
+        if (chara->y + chara->height >= HEIGHT - 60) // 假設地面高度是 HEIGHT - 60
         {
             chara->y = HEIGHT - chara->height - 60;
             if (chara->state == JUMP)
@@ -64,6 +67,7 @@ void Floor_interact(Elements *self, Elements *tar)
         }
     }
 }
+
 
 void Floor_draw(Elements *self)
 {

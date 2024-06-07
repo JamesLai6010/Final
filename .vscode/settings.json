@@ -1,5 +1,11 @@
 {
 	"terminal.integrated.env.windows": {
 		"PATH": "${workspaceFolder}\\MinGW\\bin;${env:PATH}"
+	},
+	"files.associations": {
+		"array": "c",
+		"string": "c",
+		"string_view": "c",
+		"projectile.h": "c"
 	}
 }
