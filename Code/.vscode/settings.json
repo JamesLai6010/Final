@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "gamescene.h": "c",
+        "element.h": "c"
+    }
+}
