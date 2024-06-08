@@ -22,7 +22,7 @@ Game *New_Game()
     game->game_update = game_update;
     game->game_draw = game_draw;
     game->game_destroy = game_destroy;
-    game->title = "Final Project 10xxxxxxx";
+    game->title = "Final Project 111062371";
     game->display = NULL;
     game->game_init(game);
     return game;

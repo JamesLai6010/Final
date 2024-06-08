@@ -5,4 +5,4 @@ int main(int argc, char **argv)
 	game->execute(game);
 	game->game_destroy(game);
 	return 0;
-} //abc
+}//god
