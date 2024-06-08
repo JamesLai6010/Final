@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "floor.h"
+#include <allegro5/allegro_primitives.h>
 
 #define true 1
 #define false 0
@@ -38,6 +39,10 @@ Elements *New_Character(int label)
     al_attach_sample_instance_to_mixer(pDerivedObj->atk_Sound, al_get_default_mixer());
 
     // initial the geometric information of character
+    //health
+    pDerivedObj->max_health = 100.0;
+    pDerivedObj->health = 100.0;
+
     pDerivedObj->width = pDerivedObj->gif_status[0]->width;
     pDerivedObj->height = pDerivedObj->gif_status[0]->height;
     pDerivedObj->x = 100;
@@ -163,6 +168,26 @@ void Character_draw(Elements *self) {
     if (chara->state == ATK && chara->gif_status[chara->state]->display_index == 2) {
         al_play_sample_instance(chara->atk_Sound);
     }
+    //printf("%lf %lf\n",mouse.x,mouse.y);
+    // 繪製血條
+    draw_health_bar(chara);
+}
+//血條邏輯
+void draw_health_bar(Character *chara) {
+    // 繪製血條背景
+    float bar_width = 300; // 血條的寬度
+    float bar_height = 40; // 血條的高度
+    float health_percentage = chara->health / chara->max_health;
+    float health_bar_width = bar_width * health_percentage;
+    
+    // 血條背景方框（灰色）
+    al_draw_filled_rectangle(1550, 30, 1550 + bar_width, 30 + bar_height, al_map_rgb(128, 128, 128));
+
+    // 當前健康狀態的血條（紅色）
+    al_draw_filled_rectangle(1550, 30, 1550 + health_bar_width, 30 + bar_height, al_map_rgb(255, 0, 0));
+
+    // 血條邊框（黑色）
+    al_draw_rectangle(1550, 30, 1550 + bar_width, 30 + bar_height, al_map_rgb(0, 0, 0), 1.0);
 }
 
 

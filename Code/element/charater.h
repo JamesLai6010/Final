@@ -32,6 +32,8 @@ typedef struct _Character {
     Shape *hitbox;   // The hitbox of object
     int jump_speed;  // Jump speed
     bool is_jumping; // Is the character jumping
+    float max_health;
+    float health;
 } Character;
 
 Elements *New_Character(int label);
@@ -40,5 +42,6 @@ void Character_update(Elements *self);
 void Character_interact(Elements *self, Elements *target);
 void Character_draw(Elements *self);
 void Character_destory(Elements *self);
+void draw_health_bar(Character *chara);
 
 #endif
