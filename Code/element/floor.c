@@ -37,6 +37,7 @@ void _Floor_load_map(Floor *floor)
     }
     fclose(data);
 }
+
 void Floor_update(Elements *ele) {}
 void Floor_interact(Elements *self, Elements *tar)
 {

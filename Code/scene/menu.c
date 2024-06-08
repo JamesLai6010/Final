@@ -11,7 +11,9 @@ Scene *New_Menu(int label)
     // setting derived object member
     pDerivedObj->font = al_load_ttf_font("assets/font/pirulen.ttf", 12, 0);
     // Load sound
-    pDerivedObj->song = al_load_sample("assets/sound/menu.mp3");
+    pDerivedObj->song = al_load_sample("assets/sound/mario_menu.mp3");
+    // load image
+    pDerivedObj->manu = al_load_bitmap("assets/image/menu.png");
     al_reserve_samples(20);
     pDerivedObj->sample_instance = al_create_sample_instance(pDerivedObj->song);
     pDerivedObj->title_x = WIDTH / 2;
@@ -31,7 +33,7 @@ Scene *New_Menu(int label)
 }
 void menu_update(Scene *self)
 {
-    if (key_state[ALLEGRO_KEY_ENTER])
+    if (mouse_state[1] && mouse.x >= 813 && mouse.x <= 1112 && mouse.y >= 497 && mouse.y <= 574)   //左鍵
     {
         self->scene_end = true;
         window = 1;
@@ -41,10 +43,13 @@ void menu_update(Scene *self)
 void menu_draw(Scene *self)
 {
     Menu *Obj = ((Menu *)(self->pDerivedObj));
-    al_draw_text(Obj->font, al_map_rgb(255, 255, 255), Obj->title_x, Obj->title_y, ALLEGRO_ALIGN_CENTRE, "Press 'Enter' to start");
-    al_draw_rectangle(Obj->title_x - 150, Obj->title_y - 30, Obj->title_x + 150, Obj->title_y + 30, al_map_rgb(255, 255, 255), 0);
+    // 先繪製背景
+    al_draw_bitmap(Obj->manu, 0, 0, 0);
+    // 再繪製其他元素
+    
     al_play_sample_instance(Obj->sample_instance);
 }
+
 void menu_destroy(Scene *self)
 {
     Menu *Obj = ((Menu *)(self->pDerivedObj));

@@ -41,7 +41,7 @@ Elements *New_Character(int label)
     pDerivedObj->width = pDerivedObj->gif_status[0]->width;
     pDerivedObj->height = pDerivedObj->gif_status[0]->height;
     pDerivedObj->x = 100;
-    pDerivedObj->y = HEIGHT - pDerivedObj->height - 70; // 假設地面高度為 HEIGHT - 60
+    pDerivedObj->y = HEIGHT - 140 - pDerivedObj->height; // 假設地面高度為 HEIGHT - 60
     pDerivedObj->hitbox = New_Rectangle(pDerivedObj->x,
                                         pDerivedObj->y,
                                         pDerivedObj->x + pDerivedObj->width,
