@@ -13,7 +13,7 @@ Scene *New_Menu(int label)
     // Load sound
     pDerivedObj->song = al_load_sample("assets/sound/mario_menu.mp3");
     // load image
-    pDerivedObj->manu = al_load_bitmap("assets/image/menu.png");
+    pDerivedObj->menu = al_load_bitmap("assets/image/menu.png");
     al_reserve_samples(20);
     pDerivedObj->sample_instance = al_create_sample_instance(pDerivedObj->song);
     pDerivedObj->title_x = WIDTH / 2;
@@ -33,10 +33,19 @@ Scene *New_Menu(int label)
 }
 void menu_update(Scene *self)
 {
-    if (mouse_state[1] && mouse.x >= 813 && mouse.x <= 1112 && mouse.y >= 497 && mouse.y <= 574)   //左鍵
+    //left click
+    if (mouse_state[1] && mouse.x >= 813 && mouse.x <= 1112 && mouse.y >= 497 && mouse.y <= 574) //start
     {
         self->scene_end = true;
         window = 1;
+    } else if (mouse_state[1] && mouse.x >= 813 && mouse.x <= 1112 && mouse.y >= 652 && mouse.y <= 730) //about
+    {   
+        self->scene_end = true;
+        window = 2;
+    } else if (mouse_state[1] && mouse.x >= 860 && mouse.x <= 1061 && mouse.y >= 810 && mouse.y <= 889)
+    {
+        self->scene_end = true;
+        exit(0);
     }
     return;
 }
@@ -44,7 +53,7 @@ void menu_draw(Scene *self)
 {
     Menu *Obj = ((Menu *)(self->pDerivedObj));
     // 先繪製背景
-    al_draw_bitmap(Obj->manu, 0, 0, 0);
+    al_draw_bitmap(Obj->menu, 0, 0, 0);
     // 再繪製其他元素
     
     al_play_sample_instance(Obj->sample_instance);
