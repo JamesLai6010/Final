@@ -78,7 +78,7 @@ void Character_update(Elements *self) {
     if (chara->is_jumping) {
         chara->jump_speed += GRAVITY;
         _Character_update_position(self, 0, chara->jump_speed);
-        if (chara->y + chara->height >= stop_y) {
+        if ((chara->y + chara->height >= stop_y) && (chara->y + chara->height < stop_y+50)) {
             chara->y = stop_y - chara->height;
             chara->is_jumping = false;
             chara->state = STOP;
