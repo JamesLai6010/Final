@@ -74,7 +74,7 @@ void Character_update(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
     Character_on_Floor(self);  // 去算地面高度
     // 如果有跳就去做重力
-    //printf("%d %d  ", X,sec); // 地面y高度
+    printf("%d %d  ", X,sec); // 地面y高度
     if (chara->is_jumping) {
         chara->jump_speed += GRAVITY;
         _Character_update_position(self, 0, chara->jump_speed);
@@ -90,9 +90,10 @@ void Character_update(Elements *self) {
             chara->y = stop_y - chara->height;
             chara->jump_speed = 0; // 重置跳躍速度
         }
-    } else if (chara->y+20 >= stop_y+70 && (X > (sec+1)*70-50)) {  //頭在地板下緣
+    } else if (chara->y+20 >= stop_y+70) {
         chara->jump_speed += GRAVITY; // 加上重力
-        _Character_update_position(self, 0, chara->jump_speed);    
+        _Character_update_position(self, 0, chara->jump_speed);
+    
     } else {
         chara->jump_speed = 0; // 重置跳躍速度
     }
