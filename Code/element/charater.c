@@ -41,7 +41,7 @@ Elements *New_Character(int label)
     pDerivedObj->width = pDerivedObj->gif_status[0]->width;
     pDerivedObj->height = pDerivedObj->gif_status[0]->height;
     pDerivedObj->x = 0;
-    pDerivedObj->y = HEIGHT - pDerivedObj->height - 60; // 假設地面高度為 HEIGHT - 60
+    pDerivedObj->y = HEIGHT - pDerivedObj->height - 112*2; // 假設地面高度為 HEIGHT - 60
     pDerivedObj->hitbox = New_Rectangle(pDerivedObj->x,
                                         pDerivedObj->y,
                                         pDerivedObj->x + pDerivedObj->width,
@@ -67,24 +67,24 @@ int map_data[6][6];
 
 void Character_update(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
+    Character_on_Floor(self);  //去算地面高度
     //如果有跳就去做重力
     if (chara->is_jumping) {
         chara->jump_speed += GRAVITY;
         _Character_update_position(self, 0, chara->jump_speed);
-        Character_on_Floor(self);  //去算地面高度
         printf("%d",stop_y); //地面y高度
-        if (chara->y + chara->height >= HEIGHT - 60) {
-            chara->y = HEIGHT - chara->height - 60;
+        if (chara->y + chara->height >= stop_y) {
+            chara->y = stop_y - chara->height;
             chara->is_jumping = false;
             chara->state = STOP;
         }
-    } else {
-        if (key_state[ALLEGRO_KEY_SPACE] && !chara->is_jumping) {
+    }
+    if (key_state[ALLEGRO_KEY_SPACE] && !chara->is_jumping) {
             chara->is_jumping = true;
             chara->jump_speed = JUMP_STRENGTH;
             chara->state = JUMP;
-        }
     }
+    
 
     if (chara->state == STOP || chara->state == MOVE) {
         if (key_state[ALLEGRO_KEY_SPACE] && !chara->is_jumping) {
@@ -94,7 +94,7 @@ void Character_update(Elements *self) {
         } else if (key_state[ALLEGRO_KEY_A]) {
             chara->dir = false;
             chara->state = MOVE;
-            _Character_update_position(self, -5, 0);
+            _Character_update_position(self, -5, 0);             
         } else if (key_state[ALLEGRO_KEY_D]) {
             chara->dir = true;
             chara->state = MOVE;
@@ -123,12 +123,26 @@ void Character_update(Elements *self) {
             _Register_elements(scene, pro);
             chara->new_proj = true;
         }
+    } else if (chara->state == JUMP) {
+        if (key_state[ALLEGRO_KEY_A]) {
+            chara->dir = false;
+            chara->state = MOVE;
+            _Character_update_position(self, -5, 0);
+        } else if (key_state[ALLEGRO_KEY_D]) {
+            chara->dir = true;
+            chara->state = MOVE;
+            _Character_update_position(self, 5, 0);
+        } else if (key_state[ALLEGRO_KEY_SPACE] && !chara->is_jumping) {
+            chara->is_jumping = true;
+            chara->jump_speed = JUMP_STRENGTH;
+            chara->state = JUMP;
+        }
     }
 }
 
 void Character_draw(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
-    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[chara->state], al_get_time());
+    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[0], al_get_time());
     if (frame) {
         al_draw_bitmap(frame, chara->x, chara->y, ((chara->dir) ? ALLEGRO_FLIP_HORIZONTAL : 0));
     }
@@ -162,16 +176,16 @@ void Character_interact(Elements *self, Elements *tar) {
     Character *chara = (Character *)(self->pDerivedObj);
     if (tar->label == Floor_L) {
         Floor *floor = (Floor *)(tar->pDerivedObj);
-        if (chara->y + chara->height >= floor->y) {
+        /*if (chara->y + chara->height >= floor->y) {
             chara->y = floor->y - chara->height;
             chara->is_jumping = false;
             chara->state = STOP;
-        }
+        }*/
     }
 }
 
 
-//讀取地面高度，要傳到floor_interact和charater_update
+//讀取地面高度
 void Character_on_Floor(Elements *self) {
     Character *chara = (Character *)(self->pDerivedObj);
     //後面改為每換地圖再讀一次就好

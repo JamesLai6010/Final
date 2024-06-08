@@ -56,15 +56,7 @@ void Floor_interact(Elements *self, Elements *tar)
             _Character_update_position(tar, left_limit - right_limit, 0); // 從右邊邊界移動到左邊邊界
         }
 
-        // 檢查角色是否落地
-        if (chara->y + chara->height >= HEIGHT - 60) // 假設地面高度是 HEIGHT - 60
-        {
-            chara->y = HEIGHT - chara->height - 60;
-            if (chara->state == JUMP)
-            {
-                chara->state = STOP;
-            }
-        }
+    
     }
 }
 
