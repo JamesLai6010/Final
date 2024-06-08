@@ -211,7 +211,12 @@ void Character_on_Floor(Elements *self) {
     {
         for (int j = 0; j < 15; j++)
         {
-            if (map_data[j][i] == 1) floor_y[i] = j;
+            if (map_data[j][i] == 1) {
+                floor_y[i] = j;
+                break;
+            }
+            if (j == 14) floor_y[i] = 30;
+            
         }
     }
 
@@ -223,7 +228,7 @@ void Character_on_Floor(Elements *self) {
     section = X/per_width;
     sec = section;
     //現在的地面高度
-    if (sec != 28)  stop_y = floor_y[sec-1]*per_height;
+    if (sec < 27 && sec > 0)  stop_y = floor_y[sec-1]*per_height;
     else stop_y = floor_y[0]*per_height;
     //下個block的地面高度
     if (sec < 27)  next_stop_y = floor_y[sec]*per_height;
