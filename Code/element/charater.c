@@ -11,7 +11,7 @@
 #define false 0
 
 #define GRAVITY 1        //跳躍重力和跳躍高度
-#define JUMP_STRENGTH -20
+#define JUMP_STRENGTH -30
 
 /*
    [Character function]
@@ -24,8 +24,8 @@ Elements *New_Character(int label)
     Elements *pObj = New_Elements(label);
     // setting derived object member
     // load character images
-    char state_string[3][10] = {"stop", "move", "attack"};
-    for (int i = 0; i < 3; i++)
+    char state_string[2][10] = {"stop", "move"};
+    for (int i = 0; i < 2; i++)
     {
         char buffer[50];
         sprintf(buffer, "assets/image/chara_%s.gif", state_string[i]);
@@ -40,8 +40,8 @@ Elements *New_Character(int label)
     // initial the geometric information of character
     pDerivedObj->width = pDerivedObj->gif_status[0]->width;
     pDerivedObj->height = pDerivedObj->gif_status[0]->height;
-    pDerivedObj->x = 0;
-    pDerivedObj->y = HEIGHT - pDerivedObj->height - 112*2; // 假設地面高度為 HEIGHT - 60
+    pDerivedObj->x = 100;
+    pDerivedObj->y = HEIGHT - pDerivedObj->height - 70; // 假設地面高度為 HEIGHT - 60
     pDerivedObj->hitbox = New_Rectangle(pDerivedObj->x,
                                         pDerivedObj->y,
                                         pDerivedObj->x + pDerivedObj->width,
@@ -63,42 +63,55 @@ Elements *New_Character(int label)
 
 int on_floor = 1;  //在地上與否
 int stop_y;
-int map_data[6][6];
-
+int next_stop_y,last_stop_y;
+int map_data[15][27];
+int left_speed,right_speed;
+float section;
+int sec;
+int X;
 void Character_update(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
-    Character_on_Floor(self);  //去算地面高度
-    //如果有跳就去做重力
+    Character_on_Floor(self);  // 去算地面高度
+    // 如果有跳就去做重力
+    printf("%d %d  ", X,sec); // 地面y高度
     if (chara->is_jumping) {
         chara->jump_speed += GRAVITY;
         _Character_update_position(self, 0, chara->jump_speed);
-        printf("%d",stop_y); //地面y高度
         if (chara->y + chara->height >= stop_y) {
             chara->y = stop_y - chara->height;
             chara->is_jumping = false;
             chara->state = STOP;
         }
+    } else if (chara->y + chara->height < stop_y) {
+        chara->jump_speed += GRAVITY; // 加上重力
+        _Character_update_position(self, 0, chara->jump_speed);
+        if (chara->y + chara->height >= stop_y) {
+            chara->y = stop_y - chara->height;
+            chara->jump_speed = 0; // 重置跳躍速度
+        }
+    } else {
+        chara->jump_speed = 0; // 重置跳躍速度
     }
-    if (key_state[ALLEGRO_KEY_SPACE] && !chara->is_jumping) {
-            chara->is_jumping = true;
-            chara->jump_speed = JUMP_STRENGTH;
-            chara->state = JUMP;
+
+    if (key_state[ALLEGRO_KEY_W] && !chara->is_jumping) {
+        chara->is_jumping = true;
+        chara->jump_speed = JUMP_STRENGTH;
+        chara->state = JUMP;
     }
-    
 
     if (chara->state == STOP || chara->state == MOVE) {
-        if (key_state[ALLEGRO_KEY_SPACE] && !chara->is_jumping) {
+        if (key_state[ALLEGRO_KEY_W] && !chara->is_jumping) {
             chara->is_jumping = true;
             chara->jump_speed = JUMP_STRENGTH;
             chara->state = JUMP;
         } else if (key_state[ALLEGRO_KEY_A]) {
             chara->dir = false;
             chara->state = MOVE;
-            _Character_update_position(self, -5, 0);             
+            _Character_update_position(self, left_speed, 0);
         } else if (key_state[ALLEGRO_KEY_D]) {
             chara->dir = true;
             chara->state = MOVE;
-            _Character_update_position(self, 5, 0);
+            _Character_update_position(self, right_speed, 0);
         } else {
             chara->state = STOP;
         }
@@ -127,22 +140,18 @@ void Character_update(Elements *self) {
         if (key_state[ALLEGRO_KEY_A]) {
             chara->dir = false;
             chara->state = MOVE;
-            _Character_update_position(self, -5, 0);
+            _Character_update_position(self, left_speed, 0);
         } else if (key_state[ALLEGRO_KEY_D]) {
             chara->dir = true;
             chara->state = MOVE;
-            _Character_update_position(self, 5, 0);
-        } else if (key_state[ALLEGRO_KEY_SPACE] && !chara->is_jumping) {
-            chara->is_jumping = true;
-            chara->jump_speed = JUMP_STRENGTH;
-            chara->state = JUMP;
+            _Character_update_position(self, right_speed, 0);
         }
     }
 }
 
 void Character_draw(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
-    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[0], al_get_time());
+    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[1], al_get_time());
     if (frame) {
         al_draw_bitmap(frame, chara->x, chara->y, ((chara->dir) ? ALLEGRO_FLIP_HORIZONTAL : 0));
     }
@@ -151,10 +160,11 @@ void Character_draw(Elements *self) {
     }
 }
 
+
 void Character_destory(Elements *self) {
     Character *Obj = ((Character *)(self->pDerivedObj));
     al_destroy_sample_instance(Obj->atk_Sound);
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 2; i++)
         algif_destroy_animation(Obj->gif_status[i]);
     free(Obj->hitbox);
     free(Obj);
@@ -172,66 +182,62 @@ void _Character_update_position(Elements *self, int dx, int dy) {
 
 
 
-void Character_interact(Elements *self, Elements *tar) {
-    Character *chara = (Character *)(self->pDerivedObj);
-    if (tar->label == Floor_L) {
-        Floor *floor = (Floor *)(tar->pDerivedObj);
-        /*if (chara->y + chara->height >= floor->y) {
-            chara->y = floor->y - chara->height;
-            chara->is_jumping = false;
-            chara->state = STOP;
-        }*/
-    }
-}
+void Character_interact(Elements *self, Elements *tar) { }
 
 
-//讀取地面高度
+//讀取地面高度、阻擋等
 void Character_on_Floor(Elements *self) {
     Character *chara = (Character *)(self->pDerivedObj);
     //後面改為每換地圖再讀一次就好
     FILE *data;
     data = fopen("assets/map/gamescene_map.txt", "r");
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 15; i++)
     {
-        for (int j = 0; j < 6; j++)
+        for (int j = 0; j < 27; j++)
         {
             fscanf(data, "%d", &map_data[i][j]);
         }
     }
     fclose(data);
 
-    int floor_y[100];  //紀錄floor_y[第幾直排] = 有地板的橫排
+    int floor_y[100] = {0};  //紀錄floor_y[第幾直排] = 有地板的橫排
 
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 27; i++)
     {
-        for (int j = 0; j < 6; j++)
+        for (int j = 0; j < 15; j++)
         {
             if (map_data[j][i] == 1) floor_y[i] = j;
         }
     }
 
-    int per_width = 900/6;
-    int per_height = 672/6;
+    int per_width = 70;
+    int per_height = 70;
     int Y = chara->y + chara->height;  //角色腳底的y
-    int X = chara->x + chara->width;  //角色右下角的x
-    if (X/per_width <= 1) {   //在第一行
-        on_floor = 1;
-        stop_y = floor_y[1]*per_height;
-    } else if (X/per_width <= 2 || X/per_width > 1) {
-        on_floor = 1;
-        stop_y = floor_y[2]*per_height;
-    } else if (X/per_width <= 3 || X/per_width > 2) {
-        on_floor = 1;
-        stop_y = floor_y[3]*per_height;
-    } else if (X/per_width <= 4 || X/per_width > 3) {
-        on_floor = 1;
-        stop_y = floor_y[4]*per_height;
-    } else if (X/per_width <= 5 || X/per_width > 4) {
-        on_floor = 1;
-        stop_y = floor_y[5]*per_height;
-    } else if (X/per_width <= 6 || X/per_width > 5) {
-        on_floor = 1;
-        stop_y = floor_y[6]*per_height;
-    } else on_floor = 0;
+    X = chara->x + chara->width - 15;  //角色右下角的x
+    
+    section = X/per_width;
+    sec = section;
+    //現在的地面高度
+    if (sec != 28)  stop_y = floor_y[sec-1]*per_height;
+    else stop_y = floor_y[0]*per_height;
+    //下個block的地面高度
+    if (sec < 27)  next_stop_y = floor_y[sec]*per_height;
+    else next_stop_y = stop_y;
+    //上個block的地面高度
+    if (sec > 1)  last_stop_y = floor_y[sec-2]*per_height;
+    else last_stop_y = stop_y;
+    
+    if (chara->dir == true) {    //向右去檢查下一個
+        if (((chara->y+20 >= next_stop_y && chara->y+20 < next_stop_y+70) || (Y > next_stop_y && Y < next_stop_y+70)) && (X <= (sec+1)*70 && X > (sec+1)*70-50)) { //頭頂y在下一個地板的y之間
+            
+            right_speed = 0;
+        } else right_speed = 5;
+    } 
+    if (chara->dir == false) {
+        if (((chara->y+20 >= last_stop_y && chara->y+20 < last_stop_y+70) || (Y > last_stop_y && Y < last_stop_y+70)) && (X >= (sec)*70+20 && X < (sec)*70+50)) {
+            left_speed = 0;
+        } else left_speed = -5;
+    }
+    
     return;
 }
