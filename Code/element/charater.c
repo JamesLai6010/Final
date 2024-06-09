@@ -22,6 +22,7 @@ void load_map_data();
 
 Elements *New_Character(int label)
 {
+    bool map_loaded = false;
     load_map_data();
     Character *pDerivedObj = (Character *)malloc(sizeof(Character));
     Elements *pObj = New_Elements(label);
