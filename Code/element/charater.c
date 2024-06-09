@@ -18,12 +18,9 @@
    [Character function]
 */
 void Character_on_Floor(Elements *self);
-void load_map_data();
-bool map_loaded;
+
 Elements *New_Character(int label)
 {
-    map_loaded = false;
-    load_map_data();
     Character *pDerivedObj = (Character *)malloc(sizeof(Character));
     Elements *pObj = New_Elements(label);
     // setting derived object member
@@ -58,7 +55,6 @@ Elements *New_Character(int label)
                                         pDerivedObj->y + pDerivedObj->height);
     pDerivedObj->dir = false; // true: face to right, false: face to left
     // initial the animation component
-    pDerivedObj->game_over = false;
     pDerivedObj->state = STOP;
     pDerivedObj->new_proj = false;
     pDerivedObj->jump_speed = 0;
@@ -80,12 +76,10 @@ int left_speed,right_speed;
 float section;
 int sec;
 int X;
-
+int game_over;
 void Character_update(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
     Character_on_Floor(self);  // 去算地面高度
-    
-    CheckDeath(self); // 檢查角色是否死亡
     // 如果有跳就去做重力
     //printf("%d %d  ", X,sec); // 地面y高度
     
@@ -178,7 +172,7 @@ void Character_update(Elements *self) {
 
 void Character_draw(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
-    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[1], al_get_time());
+    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[chara->state], al_get_time());
     if (frame) {
         al_draw_bitmap(frame, chara->x, chara->y, ((chara->dir) ? ALLEGRO_FLIP_HORIZONTAL : 0));
     }
@@ -240,22 +234,24 @@ void _Character_update_position(Elements *self, int dx, int dy) {
 void Character_interact(Elements *self, Elements *tar) { }
 
 
-void load_map_data() {
-    if (!map_loaded) {
-        FILE *data = fopen("assets/map/gamescene_map.txt", "r");
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 27; j++) {
-                fscanf(data, "%d", &map_data[i][j]);
-            }
-        }
-        fclose(data);
-        map_loaded = true;
-    }
-}
-
 //讀取地面高度、阻擋等
 void Character_on_Floor(Elements *self) {
     Character *chara = (Character *)(self->pDerivedObj);
+    //後面改為每換地圖再讀一次就好
+    FILE *data;
+    if(chara->current_map == 0)
+        data = fopen("assets/map/gamescene_map.txt", "r");
+    else
+        data = fopen("assets/map/gamescene_map2.txt", "r");
+    for (int i = 0; i < 15; i++)
+    {
+        for (int j = 0; j < 27; j++)
+        {
+            fscanf(data, "%d", &map_data[i][j]);
+        }
+    }
+    fclose(data);
+
     int floor_y[100] = {0};  //紀錄floor_y[第幾直排] = 有地板的橫排
 
     for (int i = 0; i < 27; i++)
@@ -301,13 +297,4 @@ void Character_on_Floor(Elements *self) {
     }
     
     return;
-}
-
-void CheckDeath(Elements *self) {
-    Character *chara = ((Character *)(self->pDerivedObj));
-
-    // 檢查 y 座標是否超過最大值 or 沒血了
-    if (chara->y >= 1080-70 || chara->health <= 0) {
-        chara->game_over = true; 
-    } else chara -> game_over = false;
 }

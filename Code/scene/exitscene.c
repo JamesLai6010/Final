@@ -26,7 +26,7 @@ Scene *New_ExitScene(int label)
 
     al_set_sample_instance_playmode(pDerivedObj->sample_instance, ALLEGRO_PLAYMODE_LOOP);
     al_attach_sample_instance_to_mixer(pDerivedObj->sample_instance, al_get_default_mixer());
-    al_set_sample_instance_gain(pDerivedObj->sample_instance, 0.5);
+    al_set_sample_instance_gain(pDerivedObj->sample_instance, 0.1);
 
     pObj->pDerivedObj = pDerivedObj;
 
@@ -50,7 +50,6 @@ void exit_scene_update(Scene *self)
     } else if (mouse_state[1] && mouse.x >= 513 && mouse.x <= 704 && mouse.y >= 598 && mouse.y <= 704) 
     {   //YES
         al_play_sample(((ExitScene *)(self->pDerivedObj))->click_sound, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL); // 播放點擊聲音
-        al_destroy_sample(((ExitScene *)(self->pDerivedObj))->song);
         al_rest(0.15);
         al_play_sample(((ExitScene *)(self->pDerivedObj))->exit_mp3, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -58,14 +57,14 @@ void exit_scene_update(Scene *self)
         double end_time = start_time + 7.0;
         while (al_get_time() < end_time) {
 
-            // gif on
+            // 绘制GIF动画
             ALLEGRO_BITMAP *gif_frame = algif_get_bitmap(((ExitScene *)(self->pDerivedObj))->exit_gif, al_get_time());
             if (gif_frame) {
                 al_draw_bitmap(gif_frame, 660, 371, 0);
             }
 
             al_flip_display();
-            al_rest(0.016); // 每次延遲
+            al_rest(0.016); // 每帧延迟约 16 毫秒
         }
         exit(0);
     }

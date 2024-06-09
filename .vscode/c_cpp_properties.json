@@ -3,20 +3,15 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}\\**",
-                "${workspaceFolder}\\allegro\\include"
+                "${workspaceFolder}/**"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "${workspaceFolder}\\MinGW\\bin\\gcc.exe",
-            "compilerArgs": [
-                "-std=c11",
-                "-Wall",
-                "-Wextra"
-            ]
+            "compilerPath": "C:/Program Files/I2P1_Final_project-master/MinGW/bin/g++.exe",
+            "intelliSenseMode": "windows-gcc-x64"
         }
     ],
     "version": 4
