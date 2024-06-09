@@ -9,6 +9,7 @@
 #include "../element/projectile.h"
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include "../global.h"
 /*
    [game scene object]
 */
@@ -25,6 +26,7 @@ typedef struct _GameScene
     ALLEGRO_BITMAP *background;
     ALLEGRO_FONT *font;
     double game_time;
+    bool game_over; // 添加這個變量
 
 } GameScene;
 Scene *New_GameScene(int label);

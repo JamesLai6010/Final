@@ -8,7 +8,7 @@
 #include "../shapes/Shape.h"
 #include "../algif5/src/algif.h"
 #include <stdbool.h>
-
+#include "../global.h"
 /*
    [character object]
 */
@@ -36,6 +36,7 @@ typedef struct _Character {
     float max_health;
     float health;
     int current_map;
+    bool game_over;
 } Character;
 
 Elements *New_Character(int label);
@@ -45,5 +46,6 @@ void Character_interact(Elements *self, Elements *target);
 void Character_draw(Elements *self);
 void Character_destory(Elements *self);
 void draw_health_bar(Character *chara);
+void CheckDeath(Elements *self);
 
 #endif

@@ -18,6 +18,8 @@
    [Character function]
 */
 void Character_on_Floor(Elements *self);
+void load_map_data(Character *chara);
+bool map_loaded;
 
 Elements *New_Character(int label)
 {
@@ -44,7 +46,7 @@ Elements *New_Character(int label)
     //health
     pDerivedObj->max_health = 100.0;
     pDerivedObj->health = 100.0;
-
+    pDerivedObj->game_over = false;
     pDerivedObj->width = pDerivedObj->gif_status[0]->width;
     pDerivedObj->height = pDerivedObj->gif_status[0]->height;
     pDerivedObj->x = 100;
@@ -65,6 +67,8 @@ Elements *New_Character(int label)
     pObj->Update = Character_update;
     pObj->Interact = Character_interact;
     pObj->Destroy = Character_destory;
+
+
     return pObj;
 }
 
@@ -76,10 +80,11 @@ int left_speed,right_speed;
 float section;
 int sec;
 int X;
-int game_over;
+
 void Character_update(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
     Character_on_Floor(self);  // 去算地面高度
+    CheckDeath(self); // 檢查角色是否死亡
     // 如果有跳就去做重力
     //printf("%d %d  ", X,sec); // 地面y高度
     
@@ -172,7 +177,7 @@ void Character_update(Elements *self) {
 
 void Character_draw(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
-    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[chara->state], al_get_time());
+    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[1], al_get_time());
     if (frame) {
         al_draw_bitmap(frame, chara->x, chara->y, ((chara->dir) ? ALLEGRO_FLIP_HORIZONTAL : 0));
     }
@@ -207,6 +212,7 @@ void draw_health_bar(Character *chara) {
     // 血條邊框（黑色）
     al_draw_rectangle(1550, 30, 1550 + bar_width, 30 + bar_height, al_map_rgb(0, 0, 0), 4.0);
 }
+
 
 
 void Character_destory(Elements *self) {
@@ -297,4 +303,13 @@ void Character_on_Floor(Elements *self) {
     }
     
     return;
+}
+
+void CheckDeath(Elements *self) {
+    Character *chara = ((Character *)(self->pDerivedObj));
+
+    // 檢查 y 座標是否超過最大值 or 沒血了
+    if (chara->y >= 1080-70 || chara->health <= 0) {
+        game_over = true; 
+    } else game_over = false;
 }

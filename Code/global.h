@@ -25,4 +25,6 @@ extern ALLEGRO_EVENT event;
 extern ALLEGRO_TIMER *fps;
 extern bool debug_mode;
 
+extern double end_time;
+extern bool game_over;
 #endif
