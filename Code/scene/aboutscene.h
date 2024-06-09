@@ -12,6 +12,7 @@ typedef struct _AboutScene {
     ALLEGRO_SAMPLE *song;
     ALLEGRO_SAMPLE_INSTANCE *sample_instance;
     ALLEGRO_BITMAP *background;
+    ALLEGRO_SAMPLE *click_sound;
 } AboutScene;
 
 Scene *New_AboutScene(int label);

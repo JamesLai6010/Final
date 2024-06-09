@@ -14,6 +14,9 @@ Scene *New_Menu(int label)
     pDerivedObj->song = al_load_sample("assets/sound/mario_menu.mp3");
     // load image
     pDerivedObj->menu = al_load_bitmap("assets/image/menu.png");
+    
+    pDerivedObj->click_sound = al_load_sample("assets/sound/click.mp3");
+
     al_reserve_samples(20);
     pDerivedObj->sample_instance = al_create_sample_instance(pDerivedObj->song);
     pDerivedObj->title_x = WIDTH / 2;
@@ -23,7 +26,7 @@ Scene *New_Menu(int label)
     al_restore_default_mixer();
     al_attach_sample_instance_to_mixer(pDerivedObj->sample_instance, al_get_default_mixer());
     // set the volume of instance
-    al_set_sample_instance_gain(pDerivedObj->sample_instance, 0.1);
+    al_set_sample_instance_gain(pDerivedObj->sample_instance, 0.05);
     pObj->pDerivedObj = pDerivedObj;
     // setting derived object function
     pObj->Update = menu_update;
@@ -36,16 +39,22 @@ void menu_update(Scene *self)
     //left click
     if (mouse_state[1] && mouse.x >= 813 && mouse.x <= 1112 && mouse.y >= 497 && mouse.y <= 574) //start
     {
+        al_play_sample(((Menu *)(self->pDerivedObj))->click_sound, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL); // 播放點擊聲音
+        al_rest(0.15);
         self->scene_end = true;
         window = 1;
     } else if (mouse_state[1] && mouse.x >= 813 && mouse.x <= 1112 && mouse.y >= 652 && mouse.y <= 730) //about
     {   
+        al_play_sample(((Menu *)(self->pDerivedObj))->click_sound, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL); // 播放點擊聲音
+        al_rest(0.15);
         self->scene_end = true;
         window = 2;
     } else if (mouse_state[1] && mouse.x >= 860 && mouse.x <= 1061 && mouse.y >= 810 && mouse.y <= 889)
     {
+        al_play_sample(((Menu *)(self->pDerivedObj))->click_sound, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL); // 播放點擊聲音
+        al_rest(0.1);
         self->scene_end = true;
-        exit(0);
+        window = 3;
     }
     return;
 }
@@ -65,6 +74,9 @@ void menu_destroy(Scene *self)
     al_destroy_font(Obj->font);
     al_destroy_sample(Obj->song);
     al_destroy_sample_instance(Obj->sample_instance);
+    if (Obj->click_sound) { // 銷毀點擊聲音
+        al_destroy_sample(Obj->click_sound);
+    }
     free(Obj);
     free(self);
 }

@@ -3,7 +3,7 @@
 #include "gamescene.h"
 #include "aboutscene.h"
 #include <stdio.h>
-
+#include "exitscene.h"
 Scene *scene = NULL;
 
 void create_scene(SceneType type)
@@ -27,6 +27,11 @@ void create_scene(SceneType type)
         printf("Creating AboutScene_L\n");
         fflush(stdout);
         scene = New_AboutScene(AboutScene_L);
+        break;
+    case  ExitScene_L:
+        printf("Creating ExitScene_L\n");
+        fflush(stdout);
+        scene = New_ExitScene(ExitScene_L);
         break;
     default:
         printf("Unknown SceneType\n");

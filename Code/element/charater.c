@@ -68,7 +68,7 @@ Elements *New_Character(int label)
     return pObj;
 }
 
-int on_floor = 1;  //在地上與否
+
 int stop_y;
 int next_stop_y,last_stop_y;
 int map_data[15][27];

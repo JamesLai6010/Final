@@ -134,6 +134,9 @@ bool game_update(Game *self)
         case 2:
             create_scene(AboutScene_L);
             break;
+        case 3:
+            create_scene(ExitScene_L);
+            break;
         case -1:
             return false;
         default:
