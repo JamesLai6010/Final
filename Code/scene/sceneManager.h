@@ -8,7 +8,8 @@ typedef enum SceneType
     GameScene_L,
     AboutScene_L,
     ExitScene_L,
-    GameScene_L2
+    GameScene_L2,
+    GameOverScene_L
 } SceneType;
 void create_scene(SceneType);
 

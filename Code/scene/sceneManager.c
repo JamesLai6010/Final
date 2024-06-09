@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "exitscene.h"
 #include "gamescene2.h"
+#include "gameoverscene.h"
 Scene *scene = NULL;
 
 void create_scene(SceneType type)
@@ -38,6 +39,11 @@ void create_scene(SceneType type)
         fflush(stdout);
         scene = New_GameScene2(GameScene_L2);
         printf("Creating GameScene_L2\n");
+        break;
+    case GameOverScene_L:
+        fflush(stdout);
+        scene = New_GameOverScene(GameOverScene_L);
+        printf("Creating GameOverScene_L\n");
         break;
     default:
         printf("Unknown SceneType\n");
