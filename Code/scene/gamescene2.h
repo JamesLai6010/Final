@@ -1,0 +1,35 @@
+#ifndef GAMESCENE2_H_INCLUDED
+#define GAMESCENE2_H_INCLUDED
+#include "scene.h"
+#include "../element/element.h"
+#include "../element/charater.h"
+#include "../element/floor2.h"
+#include "../element/teleport.h"
+#include "../element/tree.h"
+#include "../element/projectile.h"
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
+/*
+   [game scene object]
+*/
+typedef enum EleType2
+{
+    Floor_L2,
+    Teleport_L2,
+    Tree_L2,
+    Character_L2,
+    Projectile_L2
+} EleType2;
+typedef struct _GameScene2
+{
+    ALLEGRO_BITMAP *background;
+    ALLEGRO_FONT *font;
+    double game_time;
+
+} GameScene2;
+Scene *New_GameScene2(int label);
+void game_scene2_update(Scene *self);
+void game_scene2_draw(Scene *self);
+void game_scene2_destroy(Scene *self);
+
+#endif

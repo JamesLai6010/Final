@@ -8,8 +8,6 @@
 #include "../shapes/Shape.h"
 #include "../algif5/src/algif.h"
 #include <stdbool.h>
-#include "../global.h"
-
 
 /*
    [character object]
@@ -37,7 +35,7 @@ typedef struct _Character {
     bool is_jumping; // Is the character jumping
     float max_health;
     float health;
-    bool game_over;
+    int current_map;
 } Character;
 
 Elements *New_Character(int label);
@@ -47,6 +45,5 @@ void Character_interact(Elements *self, Elements *target);
 void Character_draw(Elements *self);
 void Character_destory(Elements *self);
 void draw_health_bar(Character *chara);
-void CheckDeath(Elements *self);
 
 #endif
