@@ -55,6 +55,7 @@ Elements *New_Character(int label)
                                         pDerivedObj->y + pDerivedObj->height);
     pDerivedObj->dir = false; // true: face to right, false: face to left
     // initial the animation component
+    pDerivedObj->game_over = false;
     pDerivedObj->state = STOP;
     pDerivedObj->new_proj = false;
     pDerivedObj->jump_speed = 0;
@@ -76,10 +77,12 @@ int left_speed,right_speed;
 float section;
 int sec;
 int X;
-int game_over;
+
 void Character_update(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
     Character_on_Floor(self);  // 去算地面高度
+    
+    CheckDeath(self); // 檢查角色是否死亡
     // 如果有跳就去做重力
     //printf("%d %d  ", X,sec); // 地面y高度
     
@@ -294,4 +297,13 @@ void Character_on_Floor(Elements *self) {
     }
     
     return;
+}
+
+void CheckDeath(Elements *self) {
+    Character *chara = ((Character *)(self->pDerivedObj));
+
+    // 檢查 y 座標是否超過最大值 or 沒血了
+    if (chara->y >= 1080-70 || chara->health <= 0) {
+        chara->game_over = true; 
+    } else chara -> game_over = false;
 }

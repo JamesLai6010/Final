@@ -4,6 +4,7 @@
 #include "aboutscene.h"
 #include <stdio.h>
 #include "exitscene.h"
+#include "gameoverscene.h" 
 Scene *scene = NULL;
 
 void create_scene(SceneType type)
@@ -32,6 +33,11 @@ void create_scene(SceneType type)
         printf("Creating ExitScene_L\n");
         fflush(stdout);
         scene = New_ExitScene(ExitScene_L);
+        break;
+    case  GameOverScene_L:
+        printf("Creating GameOverScene_L\n");
+        fflush(stdout);
+        scene = New_GameOverScene(GameOverScene_L);
         break;
     default:
         printf("Unknown SceneType\n");
