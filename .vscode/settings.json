@@ -1,6 +1,8 @@
 {
     "files.associations": {
-        "teleport.h": "c"
+        "teleport.h": "c",
+        "allegro_font.h": "c",
+        "gameoverscene.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

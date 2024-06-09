@@ -8,6 +8,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
+
 typedef struct _GameOverScene
 {
     ALLEGRO_FONT *font;

@@ -2,10 +2,8 @@
 #include <allegro5/allegro_primitives.h>
 #include "gameoverscene.h"
 #include "../global.h"
-#include <stdio.h>
-#include <stdlib.h>
 
-extern double end_time;
+
 
 Scene *New_GameOverScene(int label)
 {

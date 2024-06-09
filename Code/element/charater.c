@@ -136,7 +136,7 @@ void Character_update(Elements *self) {
         } else {
             chara->state = STOP;
         }
-    } else if (chara->state == ATK) {
+    } /*else if (chara->state == ATK) {
         if (chara->gif_status[chara->state]->done) {
             chara->state = STOP;
             chara->new_proj = false;
@@ -157,7 +157,7 @@ void Character_update(Elements *self) {
             _Register_elements(scene, pro);
             chara->new_proj = true;
         }
-    } else if (chara->state == JUMP) {
+    } */else if (chara->state == JUMP) {
         if (key_state[ALLEGRO_KEY_A]) {
             chara->dir = false;
             chara->state = MOVE;
@@ -172,13 +172,13 @@ void Character_update(Elements *self) {
 
 void Character_draw(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
-    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[chara->state], al_get_time());
+    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[0], al_get_time());
     if (frame) {
         al_draw_bitmap(frame, chara->x, chara->y, ((chara->dir) ? ALLEGRO_FLIP_HORIZONTAL : 0));
     }
-    if (chara->state == ATK && chara->gif_status[chara->state]->display_index == 2) {
+   /*if (chara->state == ATK && chara->gif_status[chara->state]->display_index == 2) {
         al_play_sample_instance(chara->atk_Sound);
-    }
+    }*/
     // 繪製 heart GIF
     ALLEGRO_BITMAP *heart_frame = algif_get_bitmap(chara->heart_gif, al_get_time());
     if (heart_frame) {
