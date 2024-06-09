@@ -66,7 +66,7 @@ void Floor2_draw(Elements *self)
     {
         for (int j = 0; j < 27; j++)
         {
-            if (map_data[i][j])
+            if (map_data[i][j] == 1)
             {
                 al_draw_bitmap(Obj->img, Obj->x + j * Obj->width, Obj->y + i * Obj->height, 0);
             }

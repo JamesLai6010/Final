@@ -18,7 +18,7 @@ Scene *New_GameScene(int label)
     pObj->pDerivedObj = pDerivedObj;
     // register element
     _Register_elements(pObj, New_Floor(Floor_L));
-    //_Register_elements(pObj, New_Teleport(Teleport_L));
+    _Register_elements(pObj, New_Teleport(Teleport_L));
     //_Register_elements(pObj, New_Tree(Tree_L)); //先取消這些東西 之後改成道具 陷阱 傳送
     _Register_elements(pObj, New_Character(Character_L));
     // setting derived object function

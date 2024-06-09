@@ -2,6 +2,7 @@
 #define TELEPORT_H_INCLUDED
 #include "element.h"
 #include "../scene/gamescene.h" // for element label
+#include "charater.h"
 #include <stdbool.h>
 /*
    [teleport object]
