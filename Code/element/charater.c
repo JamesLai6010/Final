@@ -19,10 +19,10 @@
 */
 void Character_on_Floor(Elements *self);
 void load_map_data();
-
+bool map_loaded;
 Elements *New_Character(int label)
 {
-    bool map_loaded = false;
+    map_loaded = false;
     load_map_data();
     Character *pDerivedObj = (Character *)malloc(sizeof(Character));
     Elements *pObj = New_Elements(label);
@@ -239,7 +239,6 @@ void _Character_update_position(Elements *self, int dx, int dy) {
 
 void Character_interact(Elements *self, Elements *tar) { }
 
-bool map_loaded = false;
 
 void load_map_data() {
     if (!map_loaded) {
