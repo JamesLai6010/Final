@@ -6,6 +6,9 @@ Scene *New_GameScene(int label)
 {
     GameScene *pDerivedObj = (GameScene *)malloc(sizeof(GameScene));
     Scene *pObj = New_Scene(label);
+    // font
+    pDerivedObj->font = al_load_ttf_font("assets/font/pirulen.ttf", 44, 0);
+    pDerivedObj->game_time = 0; // 初始化時間
     // setting derived object member
     pDerivedObj->background = al_load_bitmap("assets/image/back.jpg");
     pObj->pDerivedObj = pDerivedObj;
@@ -22,6 +25,8 @@ Scene *New_GameScene(int label)
 }
 void game_scene_update(Scene *self)
 {
+    GameScene *gs = ((GameScene *)(self->pDerivedObj));
+    gs->game_time += 1.0 / 60; // 60 FPS + 1s
     // update every element
     ElementVec allEle = _Get_all_elements(self);
     for (int i = 0; i < allEle.len; i++)
@@ -63,7 +68,15 @@ void game_scene_draw(Scene *self)
         Elements *ele = allEle.arr[i];
         ele->Draw(ele);
     }
+    // show_time
+    int minutes = (int)gs->game_time / 60;
+    int seconds = (int)gs->game_time % 60;
+
+    char time_text[50];
+    sprintf(time_text, "Time: %02d:%02d", minutes, seconds);
+    al_draw_text(gs->font, al_map_rgb(255, 255, 255), 30, 20, ALLEGRO_ALIGN_LEFT, time_text);
 }
+
 void game_scene_destroy(Scene *self)
 {
     GameScene *Obj = ((GameScene *)(self->pDerivedObj));
@@ -75,6 +88,7 @@ void game_scene_destroy(Scene *self)
         Elements *ele = allEle.arr[i];
         ele->Destroy(ele);
     }
+    al_destroy_font(Obj->font);
     free(Obj);
     free(self);
 }

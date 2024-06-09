@@ -13,7 +13,7 @@
 
 #define GRAVITY 1        //跳躍重力和跳躍高度
 #define JUMP_STRENGTH -30
-
+#define FALL_SPEED 15
 /*
    [Character function]
 */
@@ -82,6 +82,7 @@ void Character_update(Elements *self) {
     Character_on_Floor(self);  // 去算地面高度
     // 如果有跳就去做重力
     //printf("%d %d  ", X,sec); // 地面y高度
+    
     if (chara->is_jumping) {
         chara->jump_speed += GRAVITY;
         _Character_update_position(self, 0, chara->jump_speed);
@@ -104,15 +105,23 @@ void Character_update(Elements *self) {
     } else {
         chara->jump_speed = 0; // 重置跳躍速度
     }
-
-    if (key_state[ALLEGRO_KEY_W] && !chara->is_jumping) {
+    bool on_ground = (chara->y + chara->height >= stop_y) && (chara->y + chara->height < stop_y + 50);
+    //printf("%d\n",on_ground);
+    if (key_state[ALLEGRO_KEY_W] && !chara->is_jumping && on_ground) {
         chara->is_jumping = true;
         chara->jump_speed = JUMP_STRENGTH;
         chara->state = JUMP;
     }
 
+    
+    if (key_state[ALLEGRO_KEY_S] && chara->is_jumping) {
+        chara->jump_speed += FALL_SPEED;
+        chara->state = STOP;
+        chara->is_jumping = false;
+    }
+
     if (chara->state == STOP || chara->state == MOVE) {
-        if (key_state[ALLEGRO_KEY_W] && !chara->is_jumping) {
+        if (key_state[ALLEGRO_KEY_W] && !chara->is_jumping  && on_ground) {
             chara->is_jumping = true;
             chara->jump_speed = JUMP_STRENGTH;
             chara->state = JUMP;
@@ -177,7 +186,7 @@ void Character_draw(Elements *self) {
         int heart_y = 5;  // 替換為 heart gif 的 y 坐標
         al_draw_bitmap(heart_frame, heart_x, heart_y, 0);
     }
-    //printf("%lf %lf\n",mouse.x,mouse.y);
+    
     // 繪製血條
     draw_health_bar(chara);
 }
