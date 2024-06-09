@@ -18,9 +18,11 @@
    [Character function]
 */
 void Character_on_Floor(Elements *self);
+void load_map_data();
 
 Elements *New_Character(int label)
 {
+    load_map_data();
     Character *pDerivedObj = (Character *)malloc(sizeof(Character));
     Elements *pObj = New_Elements(label);
     // setting derived object member
@@ -236,22 +238,24 @@ void _Character_update_position(Elements *self, int dx, int dy) {
 
 void Character_interact(Elements *self, Elements *tar) { }
 
+bool map_loaded = false;
+
+void load_map_data() {
+    if (!map_loaded) {
+        FILE *data = fopen("assets/map/gamescene_map.txt", "r");
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 27; j++) {
+                fscanf(data, "%d", &map_data[i][j]);
+            }
+        }
+        fclose(data);
+        map_loaded = true;
+    }
+}
 
 //讀取地面高度、阻擋等
 void Character_on_Floor(Elements *self) {
     Character *chara = (Character *)(self->pDerivedObj);
-    //後面改為每換地圖再讀一次就好
-    FILE *data;
-    data = fopen("assets/map/gamescene_map.txt", "r");
-    for (int i = 0; i < 15; i++)
-    {
-        for (int j = 0; j < 27; j++)
-        {
-            fscanf(data, "%d", &map_data[i][j]);
-        }
-    }
-    fclose(data);
-
     int floor_y[100] = {0};  //紀錄floor_y[第幾直排] = 有地板的橫排
 
     for (int i = 0; i < 27; i++)
