@@ -32,6 +32,8 @@ Elements *New_Character(int label)
         sprintf(buffer, "assets/image/chara_%s.gif", state_string[i]);
         pDerivedObj->gif_status[i] = algif_new_gif(buffer, -1);
     }
+    // Load the heart gif
+    pDerivedObj->heart_gif = algif_load_animation("assets/image/heart.gif");
     // load effective sound
     ALLEGRO_SAMPLE *sample = al_load_sample("assets/sound/atk_sound.wav");
     pDerivedObj->atk_Sound = al_create_sample_instance(sample);
@@ -168,6 +170,13 @@ void Character_draw(Elements *self) {
     if (chara->state == ATK && chara->gif_status[chara->state]->display_index == 2) {
         al_play_sample_instance(chara->atk_Sound);
     }
+    // 繪製 heart GIF
+    ALLEGRO_BITMAP *heart_frame = algif_get_bitmap(chara->heart_gif, al_get_time());
+    if (heart_frame) {
+        int heart_x = 1450;  // 替換為 heart gif 的 x 坐標
+        int heart_y = 5;  // 替換為 heart gif 的 y 坐標
+        al_draw_bitmap(heart_frame, heart_x, heart_y, 0);
+    }
     //printf("%lf %lf\n",mouse.x,mouse.y);
     // 繪製血條
     draw_health_bar(chara);
@@ -184,10 +193,10 @@ void draw_health_bar(Character *chara) {
     al_draw_filled_rectangle(1550, 30, 1550 + bar_width, 30 + bar_height, al_map_rgb(128, 128, 128));
 
     // 當前健康狀態的血條（紅色）
-    al_draw_filled_rectangle(1550, 30, 1550 + health_bar_width, 30 + bar_height, al_map_rgb(255, 0, 0));
-
+    al_draw_filled_rectangle(1550, 30, 1550 + health_bar_width, 30 + bar_height, al_map_rgb(255, 20, 20));
+    
     // 血條邊框（黑色）
-    al_draw_rectangle(1550, 30, 1550 + bar_width, 30 + bar_height, al_map_rgb(0, 0, 0), 1.0);
+    al_draw_rectangle(1550, 30, 1550 + bar_width, 30 + bar_height, al_map_rgb(0, 0, 0), 4.0);
 }
 
 
@@ -196,6 +205,7 @@ void Character_destory(Elements *self) {
     al_destroy_sample_instance(Obj->atk_Sound);
     for (int i = 0; i < 2; i++)
         algif_destroy_animation(Obj->gif_status[i]);
+    algif_destroy_animation(Obj->heart_gif); // Destroy the heart gif
     free(Obj->hitbox);
     free(Obj);
     free(self);
