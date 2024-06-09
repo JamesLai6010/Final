@@ -29,7 +29,7 @@ Scene *New_GameScene(int label)
 }
 void game_scene_update(Scene *self)
 {
-    GameScene *gs = ((GameScene *)(self->pDerivedObj));
+    //GameScene *gs = ((GameScene *)(self->pDerivedObj));
     ElementVec allEle = _Get_all_elements(self);
     // update every element
     for (int i = 0; i < allEle.len; i++)

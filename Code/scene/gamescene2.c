@@ -27,7 +27,7 @@ Scene *New_GameScene2(int label)
 }
 void game_scene2_update(Scene *self)
 {
-    GameScene2 *gs = ((GameScene2 *)(self->pDerivedObj));
+    //GameScene2 *gs = ((GameScene2 *)(self->pDerivedObj));
     
     // update every element
     ElementVec allEle = _Get_all_elements(self);

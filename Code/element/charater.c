@@ -81,12 +81,14 @@ int sec;
 int X;
 
 void Character_update(Elements *self) {
+    
     Character *chara = ((Character *)(self->pDerivedObj));
     Character_on_Floor(self);  // 去算地面高度
     CheckDeath(self); // 檢查角色是否死亡
     // 如果有跳就去做重力
     //printf("%d %d  ", X,sec); // 地面y高度
-    
+    chara_x = chara -> x;
+    chara_y = chara -> y;
     if (chara->is_jumping) {
         chara->jump_speed += GRAVITY;
         _Character_update_position(self, 0, chara->jump_speed);
@@ -308,5 +310,5 @@ void save_character_right_to_left() {
 }
 
 void save_character_left_to_right() {
-    chara_x = 1800;
+    chara_x = 1830;
 }
