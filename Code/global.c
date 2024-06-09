@@ -14,3 +14,9 @@ bool mouse_state[ALLEGRO_MOUSE_MAX_EXTRA_AXES] = {false};
 Point mouse;
 bool debug_mode = true;
 double end_time = 0;
+double game_time = 0;          //time
+bool game_over = false;
+int map_data[15][27] = {0};
+int chara_x = 0;               //x
+int chara_y = HEIGHT-140-160;  //y
+float chara_health = 100;      //health

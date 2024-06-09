@@ -33,7 +33,7 @@ void _Floor_load_map(Floor *floor)
     {
         for (int j = 0; j < 27; j++)
         {
-            fscanf(data, "%d", &floor->map_data[i][j]);
+            fscanf(data, "%d", &map_data[i][j]);
         }
     }
     fclose(data);
@@ -49,7 +49,7 @@ void Floor_interact(Elements *self, Elements *tar)
         int left_limit = 0 - chara->width / 2;
         if (chara->x < left_limit)
         {
-            //_Character_update_position(tar, right_limit - left_limit, 0);
+            _Character_update_position(tar, left_limit - chara->x, 0);
         }
         else if (chara->x > right_limit)
         {
@@ -66,7 +66,7 @@ void Floor_draw(Elements *self)
     {
         for (int j = 0; j < 27; j++)
         {
-            if (Obj->map_data[i][j])
+            if (map_data[i][j])
             {
                 al_draw_bitmap(Obj->img, Obj->x + j * Obj->width, Obj->y + i * Obj->height, 0);
             }

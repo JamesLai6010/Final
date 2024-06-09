@@ -18,6 +18,7 @@
    [Character function]
 */
 void Character_on_Floor(Elements *self);
+void CheckDeath(Elements *self);
 
 Elements *New_Character(int label)
 {
@@ -47,14 +48,16 @@ Elements *New_Character(int label)
 
     pDerivedObj->width = pDerivedObj->gif_status[0]->width;
     pDerivedObj->height = pDerivedObj->gif_status[0]->height;
-    pDerivedObj->x = 100;
-    pDerivedObj->y = HEIGHT - 140 - pDerivedObj->height; // 假設地面高度為 HEIGHT - 60
+    pDerivedObj->x = chara_x;
+    pDerivedObj->y = chara_y; 
     pDerivedObj->hitbox = New_Rectangle(pDerivedObj->x,
                                         pDerivedObj->y,
                                         pDerivedObj->x + pDerivedObj->width,
                                         pDerivedObj->y + pDerivedObj->height);
     pDerivedObj->dir = false; // true: face to right, false: face to left
     // initial the animation component
+    pDerivedObj->current_map = 0;
+    pDerivedObj->game_over = false;
     pDerivedObj->state = STOP;
     pDerivedObj->new_proj = false;
     pDerivedObj->jump_speed = 0;
@@ -76,10 +79,11 @@ int left_speed,right_speed;
 float section;
 int sec;
 int X;
-int game_over;
+
 void Character_update(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
     Character_on_Floor(self);  // 去算地面高度
+    CheckDeath(self); // 檢查角色是否死亡
     // 如果有跳就去做重力
     //printf("%d %d  ", X,sec); // 地面y高度
     
@@ -129,10 +133,12 @@ void Character_update(Elements *self) {
             chara->dir = false;
             chara->state = MOVE;
             _Character_update_position(self, left_speed, 0);
+            printf("Moving left: speed %d\n", left_speed);
         } else if (key_state[ALLEGRO_KEY_D]) {
             chara->dir = true;
             chara->state = MOVE;
             _Character_update_position(self, right_speed, 0);
+            printf("Moving right: speed %d\n", right_speed);
         } else {
             chara->state = STOP;
         }
@@ -172,7 +178,7 @@ void Character_update(Elements *self) {
 
 void Character_draw(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
-    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[0], al_get_time());
+    ALLEGRO_BITMAP *frame = algif_get_bitmap(chara->gif_status[1], al_get_time());
     if (frame) {
         al_draw_bitmap(frame, chara->x, chara->y, ((chara->dir) ? ALLEGRO_FLIP_HORIZONTAL : 0));
     }
@@ -195,7 +201,7 @@ void draw_health_bar(Character *chara) {
     // 繪製血條背景
     float bar_width = 300; // 血條的寬度
     float bar_height = 40; // 血條的高度
-    float health_percentage = chara->health / chara->max_health;
+    float health_percentage = chara_health / chara->max_health;
     float health_bar_width = bar_width * health_percentage;
     
     // 血條背景方框（灰色）
@@ -238,19 +244,7 @@ void Character_interact(Elements *self, Elements *tar) { }
 void Character_on_Floor(Elements *self) {
     Character *chara = (Character *)(self->pDerivedObj);
     //後面改為每換地圖再讀一次就好
-    FILE *data;
-    if(chara->current_map == 0)
-        data = fopen("assets/map/gamescene_map.txt", "r");
-    else
-        data = fopen("assets/map/gamescene_map2.txt", "r");
-    for (int i = 0; i < 15; i++)
-    {
-        for (int j = 0; j < 27; j++)
-        {
-            fscanf(data, "%d", &map_data[i][j]);
-        }
-    }
-    fclose(data);
+    
 
     int floor_y[100] = {0};  //紀錄floor_y[第幾直排] = 有地板的橫排
 
@@ -297,4 +291,22 @@ void Character_on_Floor(Elements *self) {
     }
     
     return;
+}
+
+void CheckDeath(Elements *self) {
+    Character *chara = ((Character *)(self->pDerivedObj));
+
+    // 檢查 y 座標是否超過最大值 or 沒血了
+    if (chara->y >= 1080-70 || chara->health <= 0) {
+        game_over = true; 
+    } else game_over = false;
+    //if (sec == 20) chara_health-= 50;
+}
+
+void save_character_right_to_left() {
+    chara_x = -50;
+}
+
+void save_character_left_to_right() {
+    chara_x = 1800;
 }

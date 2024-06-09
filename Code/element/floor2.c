@@ -33,7 +33,7 @@ void _Floor2_load_map(Floor2 *floor)
     {
         for (int j = 0; j < 27; j++)
         {
-            fscanf(data, "%d", &floor->map_data[i][j]);
+            fscanf(data, "%d", &map_data[i][j]);
         }
     }
     fclose(data);
@@ -66,7 +66,7 @@ void Floor2_draw(Elements *self)
     {
         for (int j = 0; j < 27; j++)
         {
-            if (Obj->map_data[i][j])
+            if (map_data[i][j])
             {
                 al_draw_bitmap(Obj->img, Obj->x + j * Obj->width, Obj->y + i * Obj->height, 0);
             }

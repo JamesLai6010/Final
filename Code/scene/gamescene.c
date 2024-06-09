@@ -35,21 +35,17 @@ void game_scene_update(Scene *self)
     for (int i = 0; i < allEle.len; i++)
     {
         Elements *ele = allEle.arr[i];
-        ele->Update(ele);
-
-        // 檢查死亡
-        if (ele->label == Character_L) {
-            CheckDeath(ele);
-            if (game_over) {
-                end_time = gs->game_time;
-                window = 5;
-                printf("Change to GameOverScene\n");
-            }
-        }
+        ele->Update(ele);        
+    }
+    if (game_over) {
+        end_time = game_time;
+        self->scene_end = true;
+        window = 5;
+        printf("Change to GameOverScene\n");
     }
     // 如果角色沒有死亡，更新遊戲時間
     if (!game_over) {
-        gs->game_time += 1.0 / 60; // 60 FPS + 1s
+        game_time += 1.0 / 60; // 60 FPS + 1s
     } 
 
     for (int i = 0; i < allEle.len; i++)
@@ -61,6 +57,7 @@ void game_scene_update(Scene *self)
             chara->current_map = 0;
             if (chara->x >= 1850)
             {
+                save_character_right_to_left();
                 self->scene_end = true;
                 window = 4; //game_scene2
                 printf("Change to scene 2\n");
@@ -110,8 +107,8 @@ void game_scene_draw(Scene *self)
         ele->Draw(ele);
     }
     // show_time
-    int minutes = (int)gs->game_time / 60;
-    int seconds = (int)gs->game_time % 60;
+    int minutes = (int)game_time / 60;
+    int seconds = (int)game_time % 60;
 
     char time_text[50];
     sprintf(time_text, "Time: %02d:%02d", minutes, seconds);

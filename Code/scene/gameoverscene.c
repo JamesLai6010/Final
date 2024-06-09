@@ -31,6 +31,9 @@ void game_over_update(Scene *self)
         al_play_sample(((GameOverScene *)(self->pDerivedObj))->click_sound, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL); // 播放點擊聲音
         al_rest(0.15);
         self->scene_end = true;
+        chara_health = 100;
+        game_time = 0;
+        chara_x = 0;
         window = 1;  //start
     } else if (mouse_state[1] && mouse.x >= 1040 && mouse.x <= 1090 && mouse.y >= 770 && mouse.y <= 795) { //no
         al_play_sample(((GameOverScene *)(self->pDerivedObj))->click_sound, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL); // 播放點擊聲音

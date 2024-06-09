@@ -4,11 +4,12 @@
 */
 Scene *New_GameScene2(int label)
 {
+    game_over = 0;
     printf("GameScene2 creating\n");
     GameScene2 *pDerivedObj = (GameScene2 *)malloc(sizeof(GameScene2));
     Scene *pObj = New_Scene(label);
     // font
-    pDerivedObj->font = al_load_ttf_font("assets/font/pirulen.ttf", 44, 0);
+    pDerivedObj->font = al_load_ttf_font("assets/font/SuperMarioBros.ttf", 50, 0);
     pDerivedObj->game_time = 0; // 初始化時間
     // setting derived object member
     pDerivedObj->background = al_load_bitmap("assets/image/back.jpg");
@@ -27,7 +28,7 @@ Scene *New_GameScene2(int label)
 void game_scene2_update(Scene *self)
 {
     GameScene2 *gs = ((GameScene2 *)(self->pDerivedObj));
-    gs->game_time += 1.0 / 60; // 60 FPS + 1s
+    
     // update every element
     ElementVec allEle = _Get_all_elements(self);
     for (int i = 0; i < allEle.len; i++)
@@ -37,7 +38,8 @@ void game_scene2_update(Scene *self)
         {
             Character *chara = (Character *)(ele->pDerivedObj);
             chara->current_map = 1;
-            if(chara->x <= 0){
+            if(chara->x < -70){       //身體一半在牆內
+                save_character_left_to_right();
                 self->scene_end = true;
                 window = 1;
                 printf("Change to scene 1\n");
@@ -49,7 +51,16 @@ void game_scene2_update(Scene *self)
     {
         allEle.arr[i]->Update(allEle.arr[i]);
     }
-
+    if (game_over) {
+        end_time = game_time;
+        self->scene_end = true;
+        window = 5;
+        printf("Change to GameOverScene\n");
+    }
+    // 如果角色沒有死亡，更新遊戲時間
+    if (!game_over) {
+        game_time += 1.0 / 60; // 60 FPS + 1s
+    } 
     // run interact for every element
     for (int i = 0; i < allEle.len; i++)
     {
@@ -87,12 +98,12 @@ void game_scene2_draw(Scene *self)
         ele->Draw(ele);
     }
     // show_time
-    int minutes = (int)gs->game_time / 60;
-    int seconds = (int)gs->game_time % 60;
+    int minutes = (int)game_time / 60;
+    int seconds = (int)game_time % 60;
 
     char time_text[50];
     sprintf(time_text, "Time: %02d:%02d", minutes, seconds);
-    al_draw_text(gs->font, al_map_rgb(255, 255, 255), 30, 20, ALLEGRO_ALIGN_LEFT, time_text);
+    al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 30, ALLEGRO_ALIGN_LEFT, time_text);
 }
 
 void game_scene2_destroy(Scene *self)

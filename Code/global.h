@@ -25,5 +25,10 @@ extern ALLEGRO_EVENT event;
 extern ALLEGRO_TIMER *fps;
 extern bool debug_mode;
 extern double end_time;
-
+extern bool game_over;
+extern double game_time;
+extern int map_data[15][27];
+extern int chara_x;
+extern int chara_y;
+extern float chara_health;
 #endif

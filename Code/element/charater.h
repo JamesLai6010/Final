@@ -35,6 +35,7 @@ typedef struct _Character {
     float max_health;
     float health;
     int current_map;
+    bool game_over;
 } Character;
 
 Elements *New_Character(int label);
@@ -44,5 +45,9 @@ void Character_interact(Elements *self, Elements *target);
 void Character_draw(Elements *self);
 void Character_destory(Elements *self);
 void draw_health_bar(Character *chara);
-
+//X Y HEALTH存入global
+void save_character_right_to_left();
+void save_character_left_to_right();
+void load_character_right_to_left();
+void load_character_left_to_right();
 #endif
