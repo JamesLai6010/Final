@@ -4,6 +4,7 @@
 #include "aboutscene.h"
 #include <stdio.h>
 #include "exitscene.h"
+#include "gamescene2.h"
 Scene *scene = NULL;
 
 void create_scene(SceneType type)
@@ -19,19 +20,24 @@ void create_scene(SceneType type)
         scene = New_Menu(Menu_L);
         break;
     case GameScene_L:
-        printf("Creating GameScene_L\n");
         fflush(stdout);
         scene = New_GameScene(GameScene_L);
+        printf("Creating GameScene_L\n");
         break;
     case AboutScene_L:
-        printf("Creating AboutScene_L\n");
         fflush(stdout);
         scene = New_AboutScene(AboutScene_L);
+        printf("Creating AboutScene_L\n");
         break;
     case  ExitScene_L:
-        printf("Creating ExitScene_L\n");
         fflush(stdout);
         scene = New_ExitScene(ExitScene_L);
+        printf("Creating ExitScene_L\n");
+        break;
+    case GameScene_L2:
+        fflush(stdout);
+        scene = New_GameScene2(GameScene_L2);
+        printf("Creating GameScene_L2\n");
         break;
     default:
         printf("Unknown SceneType\n");
