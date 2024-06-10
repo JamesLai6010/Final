@@ -87,6 +87,7 @@ int JUMP_STRENGTH;
 void Character_update(Elements *self) {
     
     Character *chara = ((Character *)(self->pDerivedObj));
+    
     Character_on_Floor(self);  // 去算地面高度
     CheckDeath(self); // 檢查角色是否死亡
     // 如果有跳就去做重力
@@ -306,13 +307,14 @@ void Character_on_Floor(Elements *self) {
     sec = X/per_width;
     
     //現在的地面高度
-    if (sec < 27 && sec >= 1)  stop_y = floor_y[sec-1]*per_height;
+    if (immortal) stop_y = HEIGHT-140;
+    else if (sec < 27 && sec >= 1)  stop_y = floor_y[sec-1]*per_height;
     else if(sec >= 27){
         stop_y = floor_y[26]*per_height;
     }
     else{
         stop_y = floor_y[0]*per_height;
-    }
+    }   
     //下個block的地面高度
     if (sec < 27)  next_stop_y = floor_y[sec]*per_height;
     else next_stop_y = stop_y;

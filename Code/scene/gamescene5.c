@@ -102,6 +102,10 @@ void game_scene5_update(Scene *self)
                 printf("Change to scene 4\n");
                 return;
             }
+            if((chara->x > 1800)){       //身體一半在牆內
+                chara->x = 1800;
+                return;
+            }
         }
     }
     for (int i = 0; i < allEle.len; i++)
