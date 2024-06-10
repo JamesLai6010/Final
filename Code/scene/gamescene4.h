@@ -1,9 +1,9 @@
-#ifndef GAMESCENE2_H_INCLUDED
-#define GAMESCENE2_H_INCLUDED
+#ifndef GAMESCENE4_H_INCLUDED
+#define GAMESCENE4_H_INCLUDED
 #include "scene.h"
 #include "../element/element.h"
 #include "../element/charater.h"
-#include "../element/floor2.h"
+#include "../element/floor4.h"
 #include "../element/speed.h"
 #include "../element/teleport.h"
 #include "../element/tree.h"
@@ -16,25 +16,24 @@
 #include "../element/jump.h"
 #include "../element/slowtrap.h"
 #include "../element/meteor.h"
-
 /*
    [game scene object]
 */
-typedef enum EleType2
+typedef enum EleType4
 {
-    Floor_L2,
-    Teleport_L2,
-    Tree_L2,
-    Character_L2,
-    Projectile_L2,
-    Speed_L2 = 11,
-    Healer_L2 = 21,
-    Trap_L2 = 31,
-    Jump_L2 = 41,
-    SlowTrap_L2 = 51,
-    Meteor_L2 = 61
-} EleType2;
-typedef struct _GameScene2
+    Floor_L4,
+    Teleport_L4,
+    Tree_L4,
+    Character_L4,
+    Projectile_L4,
+    Speed_L4 = 11,
+    Healer_L4 = 21,
+    Trap_L4 = 31,
+    Jump_L4 = 41,
+    SlowTrap_L4 = 51,
+    Meteor_L4 = 61
+} EleType4;
+typedef struct _GameScene4
 {
     ALLEGRO_BITMAP *background;
     ALLEGRO_FONT *font;
@@ -43,10 +42,10 @@ typedef struct _GameScene2
     ALLEGRO_SAMPLE *song;
     ALLEGRO_SAMPLE_INSTANCE *sample_instance;
 
-} GameScene2;
-Scene *New_GameScene2(int label);
-void game_scene2_update(Scene *self);
-void game_scene2_draw(Scene *self);
-void game_scene2_destroy(Scene *self);
+} GameScene4;
+Scene *New_GameScene4(int label);
+void game_scene4_update(Scene *self);
+void game_scene4_draw(Scene *self);
+void game_scene4_destroy(Scene *self);
 
 #endif

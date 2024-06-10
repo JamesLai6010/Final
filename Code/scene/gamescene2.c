@@ -1,9 +1,12 @@
 #include "gamescene2.h"
-
+#include <stdlib.h>
+#include <time.h>  
+#include "../global.h"
 /*
    [GameScene2 function]
 */
 bool registed2;
+
 Scene *New_GameScene2(int label)
 {
     registed2 = false;
@@ -80,6 +83,19 @@ void game_scene2_update(Scene *self)
         }
         registed2 = true;
     }
+    // 隕石生成邏輯
+    meteor_spawn_timer++;
+    int k0 = 0;
+    if (meteor_spawn_timer >= next_meteor_time && k0 <= 30) {
+        _Register_elements(self, New_Meteor(Meteor_L+k0, 0,0));
+        k0++;
+        meteor_spawn_timer = 0;
+        if (window == 1) next_meteor_time = rand() % 240; // 隨機生成下一次隕石生成時間
+        else if (window == 4) next_meteor_time = rand() % 200;
+        else if (window == 6) next_meteor_time = rand() % 170;
+        else if (window == 7) next_meteor_time = rand() % 130;
+        else if (window == 8) next_meteor_time = rand() % 100;
+    }
 
     // update every element
     ElementVec allEle = _Get_all_elements(self);
@@ -97,9 +113,16 @@ void game_scene2_update(Scene *self)
                 
                 printf("Change to scene 1\n");
                 return;
+            } else if (chara->x >= 1850) {
+                self->scene_end = true;
+                chara_x = -50;
+                window = 6;
+                printf("Change to scene 4\n");
+                return;
             }
         }
     }
+
     for (int i = 0; i < allEle.len; i++)
     {
         allEle.arr[i]->Update(allEle.arr[i]);

@@ -15,6 +15,7 @@
 #include "../element/trap.h"
 #include "../element/jump.h"
 #include "../element/slowtrap.h"
+#include "../element/meteor.h"
 /*
    [game scene object]
 */
@@ -30,6 +31,7 @@ typedef enum EleType
     Trap_L = 31,
     Jump_L = 41,
     SlowTrap_L = 51,
+    Meteor_L = 61
 } EleType;
 typedef struct _GameScene
 {
