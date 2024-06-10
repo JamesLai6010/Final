@@ -7,11 +7,12 @@
 #include <stdbool.h>
 #include "floor.h"
 #include <allegro5/allegro_primitives.h>
+#include "../global.h"
 
 #define true 1
 #define false 0
 
-#define GRAVITY 1      //跳躍重力和跳躍高度
+int GRAVITY = 1;      //跳躍重力和跳躍高度
 
 #define FALL_SPEED 15
 /*
@@ -33,8 +34,7 @@ Elements *New_Character(int label)
         sprintf(buffer, "assets/image/chara_%s.gif", state_string[i]);
         pDerivedObj->gif_status[i] = algif_new_gif(buffer, -1);
     }
-    // Load the heart gif
-    pDerivedObj->heart_gif = algif_load_animation("assets/image/heart.gif");
+    
     // load effective sound
     ALLEGRO_SAMPLE *sample = al_load_sample("assets/sound/atk_sound.wav");
     pDerivedObj->atk_Sound = al_create_sample_instance(sample);
@@ -76,7 +76,7 @@ int stop_y;
 int next_stop_y,last_stop_y;
 int map_data[15][27];
 int left_speed,right_speed;
-float section;
+int section;
 int sec;
 int X;
 
@@ -135,12 +135,12 @@ void Character_update(Elements *self) {
             chara->dir = false;
             chara->state = MOVE;
             _Character_update_position(self, left_speed, 0);
-            printf("Moving left: speed %d\n", left_speed);
+            //printf("Moving left: speed %d\n", left_speed);
         } else if (key_state[ALLEGRO_KEY_D]) {
             chara->dir = true;
             chara->state = MOVE;
             _Character_update_position(self, right_speed, 0);
-            printf("Moving right: speed %d\n", right_speed);
+            //printf("Moving right: speed %d\n", right_speed);
         } else {
             chara->state = STOP;
         }
@@ -188,12 +188,6 @@ void Character_draw(Elements *self) {
         al_play_sample_instance(chara->atk_Sound);
     }*/
     // 繪製 heart GIF
-    ALLEGRO_BITMAP *heart_frame = algif_get_bitmap(chara->heart_gif, al_get_time());
-    if (heart_frame) {
-        int heart_x = 1450;  // 替換為 heart gif 的 x 坐標
-        int heart_y = 5;  // 替換為 heart gif 的 y 坐標
-        al_draw_bitmap(heart_frame, heart_x, heart_y, 0);
-    }
     
     // 繪製血條
     draw_health_bar(chara);
@@ -222,7 +216,7 @@ void Character_destory(Elements *self) {
     al_destroy_sample_instance(Obj->atk_Sound);
     for (int i = 0; i < 2; i++)
         algif_destroy_animation(Obj->gif_status[i]);
-    algif_destroy_animation(Obj->heart_gif); // Destroy the heart gif
+    //algif_destroy_animation(Obj->heart_gif); // Destroy the heart gif
     free(Obj->hitbox);
     free(Obj);
     free(self);
@@ -268,8 +262,8 @@ void Character_on_Floor(Elements *self) {
     int Y = chara->y + chara->height;  //角色腳底的y
     X = chara->x + chara->width - 15;  //角色右下角的x
     
-    section = X/per_width;
-    sec = section;
+    sec = X/per_width;
+    
     //現在的地面高度
     if (sec < 27 && sec > 0)  stop_y = floor_y[sec-1]*per_height;
     else stop_y = floor_y[0]*per_height;

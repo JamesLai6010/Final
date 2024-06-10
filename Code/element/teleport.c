@@ -1,10 +1,5 @@
 #include "teleport.h"
 #include <stdbool.h>
-#include <stdio.h>
-
-// 地图数据数组
-int teleport_map_data[15][27];
-
 /*
    [teleport function]
 */
@@ -13,12 +8,11 @@ Elements *New_Teleport(int label)
     Teleport *pDerivedObj = (Teleport *)malloc(sizeof(Teleport));
     Elements *pObj = New_Elements(label);
     // setting derived object member
-    pDerivedObj->img = al_load_bitmap("assets/image/yellow_key.png");
+    pDerivedObj->img = al_load_bitmap("assets/image/teleport.png");
     pDerivedObj->width = al_get_bitmap_width(pDerivedObj->img);
     pDerivedObj->height = al_get_bitmap_height(pDerivedObj->img);
-    //_Teleport_load_map(pDerivedObj);
-    pDerivedObj->x = 0;
-    pDerivedObj->y = 0;
+    pDerivedObj->x = WIDTH - pDerivedObj->width;
+    pDerivedObj->y = HEIGHT - pDerivedObj->height;
     pDerivedObj->activate = false;
     // setting the interact object
     pObj->inter_obj[pObj->inter_len++] = Character_L;
@@ -30,16 +24,10 @@ Elements *New_Teleport(int label)
     pObj->Destroy = Teleport_destory;
     return pObj;
 }
-
-void _Teleport_load_map(Teleport *teleport)
-{
-
-}
-
 void Teleport_update(Elements *self)
 {
     Teleport *Obj = ((Teleport *)(self->pDerivedObj));
-    if (key_state[ALLEGRO_KEY_SPACE])
+    if (key_state[ALLEGRO_KEY_W])
     {
         Obj->activate = true;
     }
@@ -48,7 +36,6 @@ void Teleport_update(Elements *self)
         Obj->activate = false;
     }
 }
-//要改
 void Teleport_interact(Elements *self, Elements *tar)
 {
     if (tar->label == Character_L)
@@ -63,22 +50,11 @@ void Teleport_interact(Elements *self, Elements *tar)
         }
     }
 }
-
 void Teleport_draw(Elements *self)
 {
     Teleport *Obj = ((Teleport *)(self->pDerivedObj));
-    for (int i = 0; i < 15; i++)
-    {
-        for (int j = 0; j < 27; j++)
-        {
-            if (map_data[i][j] == 2)
-            {
-                al_draw_bitmap(Obj->img, Obj->x + j * Obj->width, Obj->y + i * Obj->height, 0);
-            }
-        }
-    }
+    al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
 }
-
 void Teleport_destory(Elements *self)
 {
     Teleport *Obj = ((Teleport *)(self->pDerivedObj));

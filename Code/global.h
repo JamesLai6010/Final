@@ -32,4 +32,5 @@ extern int chara_x;
 extern int chara_y;
 extern float chara_health;
 extern int JUMP_STRENGTH;
+extern int immortal;
 #endif

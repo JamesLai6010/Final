@@ -21,3 +21,4 @@ int chara_x = 0;               //x
 int chara_y = HEIGHT-140-160;  //y
 float chara_health = 100;      //health
 int JUMP_STRENGTH = -28;
+int immortal = 1;

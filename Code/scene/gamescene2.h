@@ -25,6 +25,9 @@ typedef struct _GameScene2
     ALLEGRO_BITMAP *background;
     ALLEGRO_FONT *font;
     double game_time;
+    ALGIF_ANIMATION *heart_gif;    //心臟跳動
+    ALLEGRO_SAMPLE *song;
+    ALLEGRO_SAMPLE_INSTANCE *sample_instance;
 
 } GameScene2;
 Scene *New_GameScene2(int label);

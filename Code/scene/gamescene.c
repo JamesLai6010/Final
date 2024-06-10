@@ -11,6 +11,13 @@ Scene *New_GameScene(int label)
     Scene *pObj = New_Scene(label);
     // font
     pDerivedObj->font = al_load_ttf_font("assets/font/SuperMarioBros.ttf", 50, 0);
+    // Load the heart gif
+    pDerivedObj->heart_gif = algif_load_animation("assets/image/heart.gif");
+    pDerivedObj->song = al_load_sample("assets/sound/gamescene.mp3");
+    
+    al_reserve_samples(20);
+    pDerivedObj->sample_instance = al_create_sample_instance(pDerivedObj->song);
+
     pDerivedObj->game_time = 0; // 初始化時間
     pDerivedObj->game_over = false;
     // setting derived object member
@@ -19,8 +26,15 @@ Scene *New_GameScene(int label)
     // register element
     _Register_elements(pObj, New_Floor(Floor_L));
     _Register_elements(pObj, New_Teleport(Teleport_L));
+    _Register_elements(pObj, New_Speed(Speed_L));
     //_Register_elements(pObj, New_Tree(Tree_L)); //先取消這些東西 之後改成道具 陷阱 傳送
     _Register_elements(pObj, New_Character(Character_L));
+
+    // Loop the song until the display closes
+    al_set_sample_instance_playmode(pDerivedObj->sample_instance, ALLEGRO_PLAYMODE_LOOP);
+    al_restore_default_mixer();
+    al_attach_sample_instance_to_mixer(pDerivedObj->sample_instance, al_get_default_mixer());
+    al_set_sample_instance_gain(pDerivedObj->sample_instance, 0.5);
     // setting derived object function
     pObj->Update = game_scene_update;
     pObj->Draw = game_scene_draw;
@@ -107,6 +121,14 @@ void game_scene_draw(Scene *self)
     char time_text[50];
     sprintf(time_text, "Time: %02d:%02d", minutes, seconds);
     al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 30, ALLEGRO_ALIGN_LEFT, time_text);
+
+    ALLEGRO_BITMAP *heart_frame = algif_get_bitmap(gs->heart_gif, al_get_time());
+    if (heart_frame) {
+        int heart_x = 1450;  // 替換為 heart gif 的 x 坐標
+        int heart_y = 5;  // 替換為 heart gif 的 y 坐標
+        al_draw_bitmap(heart_frame, heart_x, heart_y, 0);
+    }
+    al_play_sample_instance(gs->sample_instance);
 }
 
 void game_scene_destroy(Scene *self)
@@ -122,6 +144,9 @@ void game_scene_destroy(Scene *self)
         ele->Destroy(ele);
     }
     al_destroy_font(Obj->font);
+    algif_destroy_animation(Obj->heart_gif);
+    al_destroy_sample_instance(Obj->sample_instance);
+    al_destroy_sample(Obj->song);
     free(Obj);
     free(self);
     printf("gameScene destroy finishing\n");
