@@ -1,12 +1,12 @@
-#include "gamescene2.h"
+#include "gamescene4.h"
 /*
    [GameScene function]
 */
-Scene *New_GameScene2(int label)
+Scene *New_GameScene4(int label)
 {
     game_over = 0;
-    printf("GameScene2 creating\n");
-    GameScene2 *pDerivedObj = (GameScene2 *)malloc(sizeof(GameScene2));
+    printf("GameScene4 creating\n");
+    GameScene4 *pDerivedObj = (GameScene4 *)malloc(sizeof(GameScene4));
     Scene *pObj = New_Scene(label);
     // font
     pDerivedObj->font = al_load_ttf_font("assets/font/SuperMarioBros.ttf", 50, 0);
@@ -20,11 +20,11 @@ Scene *New_GameScene2(int label)
     pDerivedObj->sample_instance = al_create_sample_instance(pDerivedObj->song);
     pObj->pDerivedObj = pDerivedObj;
     // register element
-    _Register_elements(pObj, New_Floor2(Floor_L2));
+    _Register_elements(pObj, New_Floor4(Floor_L4));
     //_Register_elements(pObj, New_Teleport(Teleport_L));
     //_Register_elements(pObj, New_Tree(Tree_L)); //先取消這些東西 之後改成道具 陷阱 傳送
-    _Register_elements(pObj, New_Character(Character_L2));
-    _Register_elements(pObj, New_Speed(Speed_L2));
+    _Register_elements(pObj, New_Character(Character_L4));
+    _Register_elements(pObj, New_Speed(Speed_L4));
     _Register_elements(pObj, New_Heal(Healer_L));
     // Loop the song until the display closes
     al_set_sample_instance_playmode(pDerivedObj->sample_instance, ALLEGRO_PLAYMODE_LOOP);
@@ -33,12 +33,12 @@ Scene *New_GameScene2(int label)
     al_set_sample_instance_gain(pDerivedObj->sample_instance, 0.5);
 
     // setting derived object function
-    pObj->Update = game_scene2_update;
-    pObj->Draw = game_scene2_draw;
-    pObj->Destroy = game_scene2_destroy;
+    pObj->Update = game_scene4_update;
+    pObj->Draw = game_scene4_draw;
+    pObj->Destroy = game_scene4_destroy;
     return pObj;
 }
-void game_scene2_update(Scene *self)
+void game_scene4_update(Scene *self)
 {
     //GameScene2 *gs = ((GameScene2 *)(self->pDerivedObj));
     
@@ -47,22 +47,22 @@ void game_scene2_update(Scene *self)
     for (int i = 0; i < allEle.len; i++)
     {
         Elements *ele = allEle.arr[i];
-        if (ele->label == Character_L2)
+        if (ele->label == Character_L4)
         {
             Character *chara = (Character *)(ele->pDerivedObj);
-            chara->current_map = 1;
+            chara->current_map = 3;
             if(chara->x < -70){       //身體一半在牆內
                 self->scene_end = true;
                 chara_x = 1800;
-                window = 1;
-                printf("Change to scene 1\n");
+                window = 6;
+                printf("Change to scene 3\n");
                 return;
             }
             if((chara->x >= 1850)){       //身體一半在牆內
                 self->scene_end = true;
                 chara_x = -50;
-                window = 6;
-                printf("Change to scene 3\n");
+                window = 8;
+                printf("Change to scene 5\n");
                 return;
             }
         }
@@ -106,10 +106,10 @@ void game_scene2_update(Scene *self)
     
 
 }
-void game_scene2_draw(Scene *self)
+void game_scene4_draw(Scene *self)
 {
     al_clear_to_color(al_map_rgb(0, 0, 0));
-    GameScene2 *gs = ((GameScene2 *)(self->pDerivedObj));
+    GameScene4 *gs = ((GameScene4 *)(self->pDerivedObj));
     al_draw_bitmap(gs->background, 0, 0, 0);
     ElementVec allEle = _Get_all_elements(self);
     for (int i = 0; i < allEle.len; i++)
@@ -139,10 +139,10 @@ void game_scene2_draw(Scene *self)
     al_play_sample_instance(gs->sample_instance);
 }
 
-void game_scene2_destroy(Scene *self)
+void game_scene4_destroy(Scene *self)
 {
-    printf("gameScene2 destroying\n");
-    GameScene2 *Obj = ((GameScene2 *)(self->pDerivedObj));
+    printf("gameScene4 destroying\n");
+    GameScene4 *Obj = ((GameScene4 *)(self->pDerivedObj));
     ALLEGRO_BITMAP *background = Obj->background;
     al_destroy_bitmap(background);
     ElementVec allEle = _Get_all_elements(self);
