@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 
-Elements *New_SlowTrap(int label) {
+Elements *New_SlowTrap(int label, int x, int y) {
     SlowTrap *pDerivedObj = (SlowTrap *)malloc(sizeof(SlowTrap));
     Elements *pObj = New_Elements(label);
 
@@ -15,8 +15,8 @@ Elements *New_SlowTrap(int label) {
     pDerivedObj->height = al_get_bitmap_height(pDerivedObj->img);
 
     pDerivedObj->picked = false;
-    pDerivedObj->x = 0;
-    pDerivedObj->y = 0;
+    pDerivedObj->x = x;
+    pDerivedObj->y = y;
     pDerivedObj->activate = false;
 
     pObj->inter_obj[pObj->inter_len++] = Character_L;
@@ -53,15 +53,7 @@ void SlowTrap_interact(Elements *self, Elements *tar) {
 
 void SlowTrap_draw(Elements *self) {
     SlowTrap *Obj = ((SlowTrap *)(self->pDerivedObj));
-    for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 27; j++) {
-            if (map_data[i][j] == 31) {  // 用合適的地圖數據值來表示陷阱位置
-                Obj->x = j * Obj->width;
-                Obj->y = i * Obj->height;
-                al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
-            }
-        }
-    }
+    al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
 }
 
 void SlowTrap_destroy(Elements *self) {

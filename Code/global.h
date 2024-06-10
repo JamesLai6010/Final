@@ -40,4 +40,6 @@ extern float speed_timer;
 extern float jump_timer;
 extern float slow_timer;
 extern bool slow;
+//extern int speed_x;
+//extern int speed_y;
 #endif

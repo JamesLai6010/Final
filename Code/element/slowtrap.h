@@ -16,7 +16,7 @@ typedef struct _SlowTrap {
     bool activate;
 } SlowTrap;
 
-Elements *New_SlowTrap(int label);
+Elements *New_SlowTrap(int label, int x, int y);
 void SlowTrap_update(Elements *self);
 void SlowTrap_interact(Elements *self, Elements *tar);
 void SlowTrap_draw(Elements *self);

@@ -16,7 +16,7 @@ typedef struct _Trap {
     bool active;       // If the trap is activated
 } Trap;
 
-Elements *New_Trap(int label);
+Elements *New_Trap(int label, int x, int y);
 void Trap_update(Elements *self);
 void Trap_interact(Elements *self, Elements *tar);
 void Trap_draw(Elements *self);

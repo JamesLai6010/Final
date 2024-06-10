@@ -30,3 +30,5 @@ bool jump_boost = false;
 float jump_timer = 3.0;
 float slow_timer = 5;  // 設置減速時間
 bool slow = false;
+int speed_x = 0;
+int speed_y = 0;

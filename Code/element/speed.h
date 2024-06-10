@@ -19,7 +19,7 @@ typedef struct _Speed
     bool dele;
     bool picked;
 } Speed;
-Elements *New_Speed(int label);
+Elements *New_Speed(int label, int x, int y);
 void Speed_update(Elements *self);
 void Speed_interact(Elements *self, Elements *tar);
 void Speed_draw(Elements *self);

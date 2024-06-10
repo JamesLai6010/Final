@@ -20,7 +20,7 @@ typedef struct _Heal
     bool picked;
 } Heal;
 
-Elements *New_Heal(int label);
+Elements *New_Heal(int label, int x, int y);
 void Heal_update(Elements *self);
 void Heal_interact(Elements *self, Elements *tar);
 void Heal_draw(Elements *self);

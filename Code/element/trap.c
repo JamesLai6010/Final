@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-Elements *New_Trap(int label) {
+Elements *New_Trap(int label, int x, int y) {
     Trap *pDerivedObj = (Trap *)malloc(sizeof(Trap));
     Elements *pObj = New_Elements(label);
     
@@ -12,8 +12,8 @@ Elements *New_Trap(int label) {
     pDerivedObj->width = al_get_bitmap_width(pDerivedObj->img);
     pDerivedObj->height = al_get_bitmap_height(pDerivedObj->img);
 
-    pDerivedObj->x = 0;
-    pDerivedObj->y = 0;
+    pDerivedObj->x = x;
+    pDerivedObj->y = y;
     pDerivedObj->active = true;
     
     // setting the interact object
@@ -53,15 +53,7 @@ void Trap_interact(Elements *self, Elements *tar) {
 
 void Trap_draw(Elements *self) {
     Trap *Obj = (Trap *)(self->pDerivedObj);
-    for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 27; j++) {
-            if (map_data[i][j] == 21) {
-                Obj->x = j * Obj->width;
-                Obj->y = i * Obj->height;
-                al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
-            }
-        }
-    }
+    al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
 }
 
 void Trap_destroy(Elements *self) {

@@ -3,8 +3,10 @@
 /*
    [GameScene function]
 */
+bool registed;
 Scene *New_GameScene(int label)
 {
+    registed = false;
     end_time = 0;
     game_over = 0;
     GameScene *pDerivedObj = (GameScene *)malloc(sizeof(GameScene));
@@ -26,13 +28,13 @@ Scene *New_GameScene(int label)
     // register element
     _Register_elements(pObj, New_Floor(Floor_L));
     //_Register_elements(pObj, New_Teleport(Teleport_L));
-    _Register_elements(pObj, New_Speed(Speed_L));
+    
     //_Register_elements(pObj, New_Tree(Tree_L)); //先取消這些東西 之後改成道具 陷阱 傳送
     _Register_elements(pObj, New_Character(Character_L));
-    _Register_elements(pObj, New_Heal(Healer_L));
-    _Register_elements(pObj, New_Trap(Trap_L));
-    _Register_elements(pObj, New_Jump(Jump_L));
-    _Register_elements(pObj, New_SlowTrap(SlowTrap_L));
+    //_Register_elements(pObj, New_Heal(Healer_L));
+    //_Register_elements(pObj, New_Trap(Trap_L));
+    //_Register_elements(pObj, New_Jump(Jump_L));
+    //_Register_elements(pObj, New_SlowTrap(SlowTrap_L));
 
     // Loop the song until the display closes
     al_set_sample_instance_playmode(pDerivedObj->sample_instance, ALLEGRO_PLAYMODE_LOOP);
@@ -48,6 +50,35 @@ Scene *New_GameScene(int label)
 void game_scene_update(Scene *self)
 {
     //GameScene *gs = ((GameScene *)(self->pDerivedObj));
+    if (!registed) {
+        int k1 = 0;
+        int k2 = 0;
+        int k3 = 0;
+        int k4 = 0;
+        int k5 = 0;
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 27; j++) {
+                if (map_data[i][j] == 2) {                   
+                    //printf("Registering element at i=%d, j=%d, k=%d\n", i, j, k);
+                    _Register_elements(self, New_Speed(Speed_L+k1, j*70, i*70));
+                    k1++;
+                } else if (map_data[i][j] == 3) {
+                    _Register_elements(self, New_Heal(Healer_L+k2, j*70, i*70));
+                    k2++;
+                } else if (map_data[i][j] == 4) {
+                    _Register_elements(self, New_Jump(Jump_L+k3, j*70, i*70));
+                    k3++;
+                } else if (map_data[i][j] == 5) {
+                    _Register_elements(self, New_Trap(Trap_L+k4, j*70, i*70));
+                    k4++;
+                } else if (map_data[i][j] == 6) {
+                    _Register_elements(self, New_SlowTrap(SlowTrap_L+k5, j*70, i*70));
+                    k5++;
+                }
+            }
+        }
+        registed = true;
+    }
     
     // update every element
     ElementVec allEle = _Get_all_elements(self);

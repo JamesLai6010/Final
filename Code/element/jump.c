@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-Elements *New_Jump(int label) {
+Elements *New_Jump(int label, int x, int y) {
     Jump *pDerivedObj = (Jump *)malloc(sizeof(Jump));
     Elements *pObj = New_Elements(label);
     //printf("/n kkkkkkkk/n");
@@ -13,8 +13,8 @@ Elements *New_Jump(int label) {
     pDerivedObj->height = al_get_bitmap_height(pDerivedObj->img);
 
     pDerivedObj->picked = false;
-    pDerivedObj->x = 0;
-    pDerivedObj->y = 0;
+    pDerivedObj->x = x;
+    pDerivedObj->y = y;
     pDerivedObj->activate = false;
 
     // setting the interact object
@@ -58,15 +58,7 @@ void Jump_interact(Elements *self, Elements *tar) {
 
 void Jump_draw(Elements *self) {
     Jump *Obj = ((Jump *)(self->pDerivedObj));
-    for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 27; j++) {
-            if (map_data[i][j] == 16) {
-                Obj->x = j * Obj->width;
-                Obj->y = i * Obj->height;
-                al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
-            }
-        }
-    }
+    al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
 }
 
 void Jump_destroy(Elements *self) {

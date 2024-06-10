@@ -6,7 +6,7 @@
    [heal function]
 */
 
-Elements *New_Heal(int label)
+Elements *New_Heal(int label, int x, int y)
 {
     Heal *pDerivedObj = (Heal *)malloc(sizeof(Heal));
     Elements *pObj = New_Elements(label);
@@ -17,8 +17,8 @@ Elements *New_Heal(int label)
     pDerivedObj->height = al_get_bitmap_height(pDerivedObj->img);
 
     pDerivedObj->picked = false;
-    pDerivedObj->x = 0;
-    pDerivedObj->y = 0;
+    pDerivedObj->x = x;
+    pDerivedObj->y = y;
     pDerivedObj->activate = false;
     // setting the interact object
     pObj->inter_obj[pObj->inter_len++] = Character_L;
@@ -72,19 +72,7 @@ void Heal_interact(Elements *self, Elements *tar)
 void Heal_draw(Elements *self)
 {
     Heal *Obj = ((Heal *)(self->pDerivedObj));
-    for (int i = 0; i < 15; i++)
-    {
-        for (int j = 0; j < 27; j++)
-        {
-            if (map_data[i][j] == 11) // Assuming map_data value 7 represents a heal item
-            {
-                // Update item position
-                Obj->x = j * Obj->width;
-                Obj->y = i * Obj->height;
-                al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
-            }
-        }
-    }
+    al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
 }
 
 void Heal_destory(Elements *self)

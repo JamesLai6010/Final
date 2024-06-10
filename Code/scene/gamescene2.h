@@ -24,11 +24,11 @@ typedef enum EleType2
     Tree_L2,
     Character_L2,
     Projectile_L2,
-    Speed_L2,
-    Healer_L2,
-    Trap_L2,
-    Jump_L2,
-    SlowTrap_L2,
+    Speed_L2 = 11,
+    Healer_L2 = 21,
+    Trap_L2 = 31,
+    Jump_L2 = 41,
+    SlowTrap_L2 = 51,
 } EleType2;
 typedef struct _GameScene2
 {

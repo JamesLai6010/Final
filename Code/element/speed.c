@@ -1,14 +1,14 @@
 #include "speed.h"
 #include <stdbool.h>
 #include <stdio.h>
-
+#include "../global.h"
 /*
    [teleport function]
 */
-
-Elements *New_Speed(int label)
+bool draw;
+Elements *New_Speed(int label, int x, int y)
 {
-    
+    draw = false;
     Speed *pDerivedObj = (Speed *)malloc(sizeof(Speed));
     Elements *pObj = New_Elements(label);
     // setting derived object member
@@ -19,8 +19,8 @@ Elements *New_Speed(int label)
 
     pDerivedObj->picked = false;
     //_Teleport_load_map(pDerivedObj);
-    pDerivedObj->x = 0;
-    pDerivedObj->y = 0;
+    pDerivedObj->x = x;
+    pDerivedObj->y = y;
     pDerivedObj->activate = false;
     // setting the interact object
     pObj->inter_obj[pObj->inter_len++] = Character_L;
@@ -76,19 +76,9 @@ void Speed_interact(Elements *self, Elements *tar)
 void Speed_draw(Elements *self)
 {
     Speed *Obj = ((Speed *)(self->pDerivedObj));
-    for (int i = 0; i < 15; i++)
-    {
-        for (int j = 0; j < 27; j++)
-        {
-            if (map_data[i][j] == 6)
-            {
-                // 更新道具位置
-                Obj->x = j * Obj->width;
-                Obj->y = i * Obj->height;
-                al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
-            }
-        }
-    }
+        al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
+        //Obj->x = speed_x;
+        //Obj->y = speed_y;
 }
 
 void Speed_destory(Elements *self)

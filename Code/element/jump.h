@@ -19,7 +19,7 @@ typedef struct _Jump {
     bool picked;
 } Jump;
 
-Elements *New_Jump(int label);
+Elements *New_Jump(int label, int x, int y);
 void Jump_update(Elements *self);
 void Jump_interact(Elements *self, Elements *tar);
 void Jump_draw(Elements *self);
