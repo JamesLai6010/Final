@@ -13,7 +13,7 @@
 #define false 0
 
 int GRAVITY = 1;      //跳躍重力和跳躍高度
-float speed_timer = 0.0f; // 加速计时器
+
 
 #define FALL_SPEED 15
 /*
@@ -24,6 +24,8 @@ void CheckDeath(Elements *self);
 
 Elements *New_Character(int label)
 {
+    printf("New_Charater\n\n");
+    //chara_health = 50;
     Character *pDerivedObj = (Character *)malloc(sizeof(Character));
     Elements *pObj = New_Elements(label);
     // setting derived object member
@@ -90,7 +92,7 @@ void Character_update(Elements *self) {
     //printf("%d %d  ", X,sec); // 地面y高度
     chara_x = chara -> x;
     chara_y = chara -> y;
-    
+    printf("%d %d\n",chara->x,chara_x);
     if (speed) {
         speed_timer += 1.0 / 60; //60 FPS = 1s
         if (speed_timer >= 5.0) {
@@ -305,16 +307,20 @@ void CheckDeath(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
 
     // 檢查 y 座標是否超過最大值 or 沒血了
-    if (chara->y >= 1080-70 || chara->health <= 0) {
+    if (chara->y + chara->height >= 1050 || chara->health <= 0) {
         game_over = true; 
     } else game_over = false;
     //if (sec == 20) chara_health-= 50;
 }
 
-void save_character_right_to_left() {
+void save_character_right_to_left(int i) {
+    
+    window = i;
     chara_x = -50;
 }
 
-void save_character_left_to_right() {
+void save_character_left_to_right(int i) {
+    
+    window = i;
     chara_x = 1830;
 }

@@ -5,6 +5,8 @@
 */
 Scene *New_GameScene(int label)
 {
+    speed = false;
+    speed_timer = 0;
     end_time = 0;
     game_over = 0;
     GameScene *pDerivedObj = (GameScene *)malloc(sizeof(GameScene));
@@ -25,11 +27,11 @@ Scene *New_GameScene(int label)
     pObj->pDerivedObj = pDerivedObj;
     // register element
     _Register_elements(pObj, New_Floor(Floor_L));
-    _Register_elements(pObj, New_Teleport(Teleport_L));
+    //_Register_elements(pObj, New_Teleport(Teleport_L));
     _Register_elements(pObj, New_Speed(Speed_L));
     //_Register_elements(pObj, New_Tree(Tree_L)); //先取消這些東西 之後改成道具 陷阱 傳送
     _Register_elements(pObj, New_Character(Character_L));
-
+    _Register_elements(pObj, New_Heal(Healer_L));
     // Loop the song until the display closes
     al_set_sample_instance_playmode(pDerivedObj->sample_instance, ALLEGRO_PLAYMODE_LOOP);
     al_restore_default_mixer();
@@ -53,11 +55,12 @@ void game_scene_update(Scene *self)
         if (ele->label == Character_L)
         {
             Character *chara = (Character *)(ele->pDerivedObj);
-            chara->current_map = 1;
-            if(chara->x >= 1850){       //身體一半在牆內
-                save_character_right_to_left();
+            chara->current_map = 0;
+            if((chara->x >= 1850)){       //身體一半在牆內
                 self->scene_end = true;
+                chara_x = -50;
                 window = 4;
+                
                 printf("Change to scene 2\n");
                 return;
             }

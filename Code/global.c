@@ -25,3 +25,4 @@ int immortal = 1;
 bool speed = false;
 bool heal = false;
 bool jump = false;
+float speed_timer = 0.0f;

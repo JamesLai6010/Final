@@ -62,6 +62,7 @@ void Speed_interact(Elements *self, Elements *tar)
             chara->y <= Obj->y+70 && Obj->picked == false)
         {
             //printf("kkkk\n");
+            speed_timer = 0;
             speed = true;
             Obj->picked = true;
             self->dele = true;

@@ -51,8 +51,8 @@ void game_scene2_update(Scene *self)
             Character *chara = (Character *)(ele->pDerivedObj);
             chara->current_map = 1;
             if(chara->x < -70){       //身體一半在牆內
-                save_character_left_to_right();
                 self->scene_end = true;
+                chara_x = 1800;
                 window = 1;
                 printf("Change to scene 1\n");
                 return;

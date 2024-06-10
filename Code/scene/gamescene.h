@@ -11,6 +11,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include "../global.h"
+#include "../element/healer.h"
 /*
    [game scene object]
 */
@@ -21,7 +22,8 @@ typedef enum EleType
     Tree_L,
     Character_L,
     Projectile_L,
-    Speed_L
+    Speed_L,
+    Healer_L
 } EleType;
 typedef struct _GameScene
 {
