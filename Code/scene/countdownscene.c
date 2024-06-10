@@ -58,6 +58,7 @@ void countdown_scene_update(Scene *self)
         jump_timer = 5;
         slow_timer = 5;  // 設置減速時間
         slow = false;
+        keys_collected = 0;
         window = 1;  // 下一個場景的代碼（例如1表示遊戲主場景）
     }
 }

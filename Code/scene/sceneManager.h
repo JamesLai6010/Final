@@ -13,7 +13,8 @@ typedef enum SceneType
     GameScene_L3,
     GameScene_L4,
     GameScene_L5,
-    CountdownScene_L = 10
+    CountdownScene_L = 10,
+    VictoryScene_L 
 } SceneType;
 void create_scene(SceneType);
 

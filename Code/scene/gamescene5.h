@@ -16,6 +16,7 @@
 #include "../element/jump.h"
 #include "../element/slowtrap.h"
 #include "../element/meteor.h"
+#include "../element/door.h"
 /*
    [game scene object]
 */
@@ -26,6 +27,7 @@ typedef enum EleType5
     Tree_L5,
     Character_L5,
     Projectile_L5,
+    Door_L5,
     Speed_L5 = 11,
     Healer_L5 = 21,
     Trap_L5 = 31,

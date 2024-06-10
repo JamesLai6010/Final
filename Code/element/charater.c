@@ -87,7 +87,7 @@ int JUMP_STRENGTH;
 void Character_update(Elements *self) {
     
     Character *chara = ((Character *)(self->pDerivedObj));
-    
+    if (immortal) chara_health = 500;
     Character_on_Floor(self);  // 去算地面高度
     CheckDeath(self); // 檢查角色是否死亡
     // 如果有跳就去做重力

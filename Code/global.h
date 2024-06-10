@@ -43,6 +43,10 @@ extern bool slow;
 extern int meteor_fall_speed;
 extern int meteor_spawn_timer;
 extern int next_meteor_time;
+extern int keys_collected;
+extern int key_spawn_timer;
+extern int next_key_time;
+extern bool finish;
 //extern int speed_x;
 //extern int speed_y;
 #endif

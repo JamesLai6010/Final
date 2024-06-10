@@ -155,6 +155,9 @@ bool game_update(Game *self)
         case 10:
             create_scene(CountdownScene_L);
             break;
+        case 11:
+            create_scene(VictoryScene_L);
+            break;
         case -1:
             return false;
         default:

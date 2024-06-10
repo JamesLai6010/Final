@@ -96,6 +96,13 @@ void game_scene_update(Scene *self)
         else if (window == 7) next_meteor_time = rand() % 100;
         else if (window == 8) next_meteor_time = rand() % 60;
     }
+    key_spawn_timer++;
+    int k6 = 0;
+    if (key_spawn_timer >= next_key_time && k6 <= 9) {
+        _Register_elements(self, New_Key(Key_L+k6, 0, 0));
+        k6++;
+        key_spawn_timer = 0;
+    }
 
     // update every element
     ElementVec allEle = _Get_all_elements(self);
@@ -179,7 +186,7 @@ void game_scene_draw(Scene *self)
     int jump_sec = (int)jump_timer % 60;
     int slow_min = (int)slow_timer / 60;
     int slow_sec = (int)slow_timer % 60;
-    char time_text[50],speed_time_text[50],jump_time_text[50],slow_time_text[50];
+    char time_text[50],speed_time_text[50],jump_time_text[50],slow_time_text[50],key_text[50];
 
     sprintf(time_text, "Time: %02d:%02d", minutes, seconds);
     al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 30, ALLEGRO_ALIGN_LEFT, time_text);
@@ -201,6 +208,8 @@ void game_scene_draw(Scene *self)
         int heart_y = 5;  // 替換為 heart gif 的 y 坐標
         al_draw_bitmap(heart_frame, heart_x, heart_y, 0);
     }
+    sprintf(key_text, "KEY: %d", keys_collected);
+    al_draw_text(gs->font, al_map_rgb(255, 255, 255), 1600, 100, ALLEGRO_ALIGN_LEFT, key_text);
     al_play_sample_instance(gs->sample_instance);
 }
 

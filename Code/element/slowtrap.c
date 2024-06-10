@@ -31,7 +31,7 @@ Elements *New_SlowTrap(int label, int x, int y) {
 }
 
 void SlowTrap_update(Elements *self) {
-    SlowTrap *Obj = ((SlowTrap *)(self->pDerivedObj));
+    
     // 如果需要的話，可以在這裡添加更新邏輯
 }
 
