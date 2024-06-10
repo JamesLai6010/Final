@@ -2,18 +2,21 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-int speed[100] = {0};
 /*
    [teleport function]
 */
+
 Elements *New_Speed(int label)
 {
+    
     Speed *pDerivedObj = (Speed *)malloc(sizeof(Speed));
     Elements *pObj = New_Elements(label);
     // setting derived object member
     pDerivedObj->img = al_load_bitmap("assets/image/gemBlue.png");
     pDerivedObj->width = al_get_bitmap_width(pDerivedObj->img);
     pDerivedObj->height = al_get_bitmap_height(pDerivedObj->img);
+
+    pDerivedObj->picked = false;
     //_Teleport_load_map(pDerivedObj);
     pDerivedObj->x = 0;
     pDerivedObj->y = 0;
@@ -49,15 +52,20 @@ void Speed_update(Elements *self)
 //要改
 void Speed_interact(Elements *self, Elements *tar)
 {
+    
     if (tar->label == Character_L)
     {
         Character *chara = (Character *)(tar->pDerivedObj);
         Speed *Obj = (Speed *)(self->pDerivedObj);
-        if (chara->x >= Obj->x &&
-            chara->x <= Obj->x + Obj->width &&
-            Obj->activate)
+        //printf("%d %d %d %d\n",Obj->x, Obj->y, chara->x, chara->y);
+        if (chara->x >= Obj->x-70 && chara->x <= Obj->x && chara->y >= Obj->y-100 && 
+            chara->y <= Obj->y+70 && Obj->picked == false)
         {
-            _Character_update_position(tar, 0 - chara->x, 0);
+            //printf("kkkk\n");
+            speed = true;
+            Obj->picked = true;
+            self->dele = true;
+            // 讓道具消失
         }
     }
 }
@@ -69,9 +77,12 @@ void Speed_draw(Elements *self)
     {
         for (int j = 0; j < 27; j++)
         {
-            if (map_data[i][j] == 3)
+            if (map_data[i][j] == 6)
             {
-                al_draw_bitmap(Obj->img, Obj->x + j * Obj->width, Obj->y + i * Obj->height, 0);
+                // 更新道具位置
+                Obj->x = j * Obj->width;
+                Obj->y = i * Obj->height;
+                al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
             }
         }
     }

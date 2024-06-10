@@ -112,7 +112,10 @@ void game_scene_draw(Scene *self)
     for (int i = 0; i < allEle.len; i++)
     {
         Elements *ele = allEle.arr[i];
-        ele->Draw(ele);
+        if (!ele->dele) 
+        {
+            ele->Draw(ele);
+        }
     }
     // show_time
     int minutes = (int)game_time / 60;

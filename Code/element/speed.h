@@ -13,6 +13,8 @@ typedef struct _Speed
     int width, height; // the width and height of image
     ALLEGRO_BITMAP *img;
     bool activate; // If the teleport be activated
+    bool dele;
+    bool picked;
 } Speed;
 Elements *New_Speed(int label);
 void Speed_update(Elements *self);

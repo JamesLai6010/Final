@@ -13,6 +13,7 @@
 #define false 0
 
 int GRAVITY = 1;      //跳躍重力和跳躍高度
+float speed_timer = 0.0f; // 加速计时器
 
 #define FALL_SPEED 15
 /*
@@ -89,6 +90,17 @@ void Character_update(Elements *self) {
     //printf("%d %d  ", X,sec); // 地面y高度
     chara_x = chara -> x;
     chara_y = chara -> y;
+    
+    if (speed) {
+        speed_timer += 1.0 / 60; //60 FPS = 1s
+        if (speed_timer >= 5.0) {
+            speed = false;
+            speed_timer = 0.0f;
+        }
+    }
+    int effective_left_speed = speed ? left_speed * 2 : left_speed;
+    int effective_right_speed = speed ? right_speed * 2 : right_speed;
+
     if (chara->is_jumping) {
         chara->jump_speed += GRAVITY;
         _Character_update_position(self, 0, chara->jump_speed);
@@ -134,12 +146,12 @@ void Character_update(Elements *self) {
         } else if (key_state[ALLEGRO_KEY_A]) {
             chara->dir = false;
             chara->state = MOVE;
-            _Character_update_position(self, left_speed, 0);
+            _Character_update_position(self, effective_left_speed, 0);
             //printf("Moving left: speed %d\n", left_speed);
         } else if (key_state[ALLEGRO_KEY_D]) {
             chara->dir = true;
             chara->state = MOVE;
-            _Character_update_position(self, right_speed, 0);
+            _Character_update_position(self, effective_right_speed, 0);
             //printf("Moving right: speed %d\n", right_speed);
         } else {
             chara->state = STOP;
@@ -169,11 +181,11 @@ void Character_update(Elements *self) {
         if (key_state[ALLEGRO_KEY_A]) {
             chara->dir = false;
             chara->state = MOVE;
-            _Character_update_position(self, left_speed, 0);
+            _Character_update_position(self, effective_left_speed, 0);
         } else if (key_state[ALLEGRO_KEY_D]) {
             chara->dir = true;
             chara->state = MOVE;
-            _Character_update_position(self, right_speed, 0);
+            _Character_update_position(self, effective_right_speed, 0);
         }
     }
 }

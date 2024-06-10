@@ -33,4 +33,7 @@ extern int chara_y;
 extern float chara_health;
 extern int JUMP_STRENGTH;
 extern int immortal;
+extern bool speed;
+extern bool heal;
+extern bool jump;
 #endif
