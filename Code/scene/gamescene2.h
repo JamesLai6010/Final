@@ -18,7 +18,9 @@ typedef enum EleType2
     Teleport_L2,
     Tree_L2,
     Character_L2,
-    Projectile_L2
+    Projectile_L2,
+    Speed_L2,
+    Healer_L2
 } EleType2;
 typedef struct _GameScene2
 {

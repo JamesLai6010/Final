@@ -6,7 +6,7 @@
 Scene *New_GameScene(int label)
 {
     speed = false;
-    speed_timer = 0;
+    speed_timer = 5;
     end_time = 0;
     game_over = 0;
     GameScene *pDerivedObj = (GameScene *)malloc(sizeof(GameScene));
@@ -123,10 +123,16 @@ void game_scene_draw(Scene *self)
     // show_time
     int minutes = (int)game_time / 60;
     int seconds = (int)game_time % 60;
+    int speed_min = (int)speed_timer / 60;
+    int speed_sec = (int)speed_timer % 60;
+    char time_text[50],speed_time_text[50];
 
-    char time_text[50];
     sprintf(time_text, "Time: %02d:%02d", minutes, seconds);
     al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 30, ALLEGRO_ALIGN_LEFT, time_text);
+    if (speed) {
+        sprintf(speed_time_text, "Speeded: %02d:%02d", speed_min, speed_sec);
+        al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 80, ALLEGRO_ALIGN_LEFT, speed_time_text);
+    }
 
     ALLEGRO_BITMAP *heart_frame = algif_get_bitmap(gs->heart_gif, al_get_time());
     if (heart_frame) {

@@ -24,7 +24,8 @@ Scene *New_GameScene2(int label)
     //_Register_elements(pObj, New_Teleport(Teleport_L));
     //_Register_elements(pObj, New_Tree(Tree_L)); //先取消這些東西 之後改成道具 陷阱 傳送
     _Register_elements(pObj, New_Character(Character_L2));
-
+    _Register_elements(pObj, New_Speed(Speed_L2));
+    _Register_elements(pObj, New_Heal(Healer_L));
     // Loop the song until the display closes
     al_set_sample_instance_playmode(pDerivedObj->sample_instance, ALLEGRO_PLAYMODE_LOOP);
     al_restore_default_mixer();
@@ -112,10 +113,16 @@ void game_scene2_draw(Scene *self)
     // show_time
     int minutes = (int)game_time / 60;
     int seconds = (int)game_time % 60;
+    int speed_min = (int)speed_timer / 60;
+    int speed_sec = (int)speed_timer % 60;
 
-    char time_text[50];
+    char time_text[50],speed_time_text[50];
     sprintf(time_text, "Time: %02d:%02d", minutes, seconds);
     al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 30, ALLEGRO_ALIGN_LEFT, time_text);
+    if (speed) {
+        sprintf(speed_time_text, "Speeded: %02d:%02d", speed_min, speed_sec);
+        al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 80, ALLEGRO_ALIGN_LEFT, speed_time_text);
+    }
     ALLEGRO_BITMAP *heart_frame = algif_get_bitmap(gs->heart_gif, al_get_time());
     if (heart_frame) {
         int heart_x = 1450;  // 替換為 heart gif 的 x 坐標

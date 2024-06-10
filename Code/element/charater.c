@@ -94,10 +94,10 @@ void Character_update(Elements *self) {
     chara_y = chara -> y;
     printf("%d %d\n",chara->x,chara_x);
     if (speed) {
-        speed_timer += 1.0 / 60; //60 FPS = 1s
-        if (speed_timer >= 5.0) {
+        speed_timer -= 1.0 / 60; //60 FPS = 1s
+        if (speed_timer <= 0) {
             speed = false;
-            speed_timer = 0.0f;
+            speed_timer = 5;
         }
     }
     int effective_left_speed = speed ? left_speed * 2 : left_speed;
