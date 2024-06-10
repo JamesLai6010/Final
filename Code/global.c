@@ -20,9 +20,13 @@ int map_data[15][27] = {0};
 int chara_x = 0;               //x
 int chara_y = HEIGHT-140-160;  //y
 float chara_health = 100;      //health
-int JUMP_STRENGTH = -28;
+
 int immortal = 1;
 bool speed = false;
 bool heal = false;
 bool jump = false;
 float speed_timer = 5.0;
+bool jump_boost = false;
+float jump_timer = 3.0;
+float slow_timer = 5;  // 設置減速時間
+bool slow = false;

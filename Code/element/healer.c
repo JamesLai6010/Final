@@ -12,6 +12,7 @@ Elements *New_Heal(int label)
     Elements *pObj = New_Elements(label);
     // setting derived object member
     pDerivedObj->img = al_load_bitmap("assets/image/gemRed.png");
+    pDerivedObj->mp3 = al_load_sample("assets/sound/bubble.mp3");
     pDerivedObj->width = al_get_bitmap_width(pDerivedObj->img);
     pDerivedObj->height = al_get_bitmap_height(pDerivedObj->img);
 
@@ -58,7 +59,9 @@ void Heal_interact(Elements *self, Elements *tar)
             chara->y <= Obj->y+70 && Obj->picked == false)
         {
             // Heal the character
-            chara_health = chara->max_health;
+            al_play_sample(Obj->mp3, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+            if (chara_health <= 80) chara_health += 20;
+            else chara_health = 100;
             Obj->picked = true;
             self->dele = true;
             // Make the item disappear

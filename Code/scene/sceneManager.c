@@ -6,6 +6,7 @@
 #include "exitscene.h"
 #include "gamescene2.h"
 #include "gameoverscene.h"
+#include "countdownscene.h"
 Scene *scene = NULL;
 
 void create_scene(SceneType type)
@@ -44,6 +45,11 @@ void create_scene(SceneType type)
         fflush(stdout);
         scene = New_GameOverScene(GameOverScene_L);
         printf("Creating GameOverScene_L\n");
+        break;
+    case CountdownScene_L:
+        fflush(stdout);
+        scene = New_CountdownScene(CountdownScene_L);
+        printf("Creating CountdownScene_L\n");
         break;
     default:
         printf("Unknown SceneType\n");

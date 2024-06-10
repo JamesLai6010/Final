@@ -9,6 +9,11 @@
 #include "../element/projectile.h"
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include "../element/healer.h"
+#include "../element/trap.h"
+#include "../element/jump.h"
+#include "../element/speed.h"
+#include "../element/slowtrap.h"
 /*
    [game scene object]
 */
@@ -20,7 +25,10 @@ typedef enum EleType2
     Character_L2,
     Projectile_L2,
     Speed_L2,
-    Healer_L2
+    Healer_L2,
+    Trap_L2,
+    Jump_L2,
+    SlowTrap_L2,
 } EleType2;
 typedef struct _GameScene2
 {

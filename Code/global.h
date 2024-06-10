@@ -35,6 +35,9 @@ extern int JUMP_STRENGTH;
 extern int immortal;
 extern bool speed;
 extern bool heal;
-extern bool jump;
+extern bool jump_boost;
 extern float speed_timer;
+extern float jump_timer;
+extern float slow_timer;
+extern bool slow;
 #endif

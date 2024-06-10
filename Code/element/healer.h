@@ -4,7 +4,8 @@
 #include "../scene/gamescene.h" // for element label
 #include "charater.h"
 #include <stdbool.h>
-
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 /*
    [heal object]
 */
@@ -13,6 +14,7 @@ typedef struct _Heal
     int x, y;          // the position of image
     int width, height; // the width and height of image
     ALLEGRO_BITMAP *img;
+    ALLEGRO_SAMPLE *mp3;
     bool activate; // If the heal item is activated
     bool dele;
     bool picked;

@@ -5,8 +5,6 @@
 */
 Scene *New_GameScene(int label)
 {
-    speed = false;
-    speed_timer = 5;
     end_time = 0;
     game_over = 0;
     GameScene *pDerivedObj = (GameScene *)malloc(sizeof(GameScene));
@@ -32,6 +30,10 @@ Scene *New_GameScene(int label)
     //_Register_elements(pObj, New_Tree(Tree_L)); //先取消這些東西 之後改成道具 陷阱 傳送
     _Register_elements(pObj, New_Character(Character_L));
     _Register_elements(pObj, New_Heal(Healer_L));
+    _Register_elements(pObj, New_Trap(Trap_L));
+    _Register_elements(pObj, New_Jump(Jump_L));
+    _Register_elements(pObj, New_SlowTrap(SlowTrap_L));
+
     // Loop the song until the display closes
     al_set_sample_instance_playmode(pDerivedObj->sample_instance, ALLEGRO_PLAYMODE_LOOP);
     al_restore_default_mixer();
@@ -125,7 +127,11 @@ void game_scene_draw(Scene *self)
     int seconds = (int)game_time % 60;
     int speed_min = (int)speed_timer / 60;
     int speed_sec = (int)speed_timer % 60;
-    char time_text[50],speed_time_text[50];
+    int jump_min = (int)jump_timer / 60;
+    int jump_sec = (int)jump_timer % 60;
+    int slow_min = (int)slow_timer / 60;
+    int slow_sec = (int)slow_timer % 60;
+    char time_text[50],speed_time_text[50],jump_time_text[50],slow_time_text[50];
 
     sprintf(time_text, "Time: %02d:%02d", minutes, seconds);
     al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 30, ALLEGRO_ALIGN_LEFT, time_text);
@@ -133,7 +139,14 @@ void game_scene_draw(Scene *self)
         sprintf(speed_time_text, "Speeded: %02d:%02d", speed_min, speed_sec);
         al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 80, ALLEGRO_ALIGN_LEFT, speed_time_text);
     }
-
+    if (jump_boost) {
+        sprintf(jump_time_text, "Jump Boosted: %02d:%02d", jump_min, jump_sec);
+        al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 130, ALLEGRO_ALIGN_LEFT, jump_time_text);
+    }
+    if (slow) {
+        sprintf(slow_time_text, "Slowed: %02d:%02d", slow_min, slow_sec);
+        al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 180, ALLEGRO_ALIGN_LEFT, slow_time_text);
+    }
     ALLEGRO_BITMAP *heart_frame = algif_get_bitmap(gs->heart_gif, al_get_time());
     if (heart_frame) {
         int heart_x = 1450;  // 替換為 heart gif 的 x 坐標

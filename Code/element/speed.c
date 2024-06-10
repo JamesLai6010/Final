@@ -13,6 +13,7 @@ Elements *New_Speed(int label)
     Elements *pObj = New_Elements(label);
     // setting derived object member
     pDerivedObj->img = al_load_bitmap("assets/image/gemBlue.png");
+    pDerivedObj->mp3 = al_load_sample("assets/sound/bubble.mp3");
     pDerivedObj->width = al_get_bitmap_width(pDerivedObj->img);
     pDerivedObj->height = al_get_bitmap_height(pDerivedObj->img);
 
@@ -62,6 +63,7 @@ void Speed_interact(Elements *self, Elements *tar)
             chara->y <= Obj->y+70 && Obj->picked == false)
         {
             //printf("kkkk\n");
+            al_play_sample(Obj->mp3, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             speed_timer = 5;
             speed = true;
             Obj->picked = true;
