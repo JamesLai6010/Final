@@ -11,8 +11,8 @@
 #define true 1
 #define false 0
 
-#define GRAVITY 1        //跳躍重力和跳躍高度
-#define JUMP_STRENGTH -30
+#define GRAVITY 1      //跳躍重力和跳躍高度
+
 #define FALL_SPEED 15
 /*
    [Character function]

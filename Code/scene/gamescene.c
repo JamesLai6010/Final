@@ -30,12 +30,28 @@ Scene *New_GameScene(int label)
 void game_scene_update(Scene *self)
 {
     //GameScene *gs = ((GameScene *)(self->pDerivedObj));
-    ElementVec allEle = _Get_all_elements(self);
+    
     // update every element
+    ElementVec allEle = _Get_all_elements(self);
     for (int i = 0; i < allEle.len; i++)
     {
         Elements *ele = allEle.arr[i];
-        ele->Update(ele);        
+        if (ele->label == Character_L)
+        {
+            Character *chara = (Character *)(ele->pDerivedObj);
+            chara->current_map = 1;
+            if(chara->x >= 1850){       //身體一半在牆內
+                save_character_right_to_left();
+                self->scene_end = true;
+                window = 4;
+                printf("Change to scene 2\n");
+                return;
+            }
+        }
+    }
+    for (int i = 0; i < allEle.len; i++)
+    {
+        allEle.arr[i]->Update(allEle.arr[i]);
     }
     if (game_over) {
         end_time = game_time;
@@ -47,29 +63,6 @@ void game_scene_update(Scene *self)
     if (!game_over) {
         game_time += 1.0 / 60; // 60 FPS + 1s
     } 
-
-    for (int i = 0; i < allEle.len; i++)
-    {
-        Elements *ele = allEle.arr[i];
-        if (ele->label == Character_L)
-        {
-            Character *chara = (Character *)(ele->pDerivedObj);
-            chara->current_map = 0;
-            if (chara->x >= 1850)
-            {
-                save_character_right_to_left();
-                self->scene_end = true;
-                window = 4; //game_scene2
-                printf("Change to scene 2\n");
-                return; 
-            }
-        }
-    }
-    for (int i = 0; i < allEle.len; i++)
-    {
-        allEle.arr[i]->Update(allEle.arr[i]);
-    }
-
     // run interact for every element
     for (int i = 0; i < allEle.len; i++)
     {
@@ -92,7 +85,8 @@ void game_scene_update(Scene *self)
         if (ele->dele)
             _Remove_elements(self, ele);
     }
-     
+    
+
 }
 
 void game_scene_draw(Scene *self)

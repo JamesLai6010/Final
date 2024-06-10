@@ -31,4 +31,5 @@ extern int map_data[15][27];
 extern int chara_x;
 extern int chara_y;
 extern float chara_health;
+extern int JUMP_STRENGTH;
 #endif
