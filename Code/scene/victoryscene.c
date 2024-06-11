@@ -23,7 +23,7 @@ Scene *New_VictoryScene(int label)
 
 void victory_update(Scene *self)
 {
-    printf("%lf %lf\n",mouse.x,mouse.y);
+    //printf("%lf %lf\n",mouse.x,mouse.y);
     if (mouse_state[1] && mouse.x >= 230 && mouse.x <= 640 && mouse.y >= 775 && mouse.y <= 825) { // yes
         al_play_sample(((VictoryScene *)(self->pDerivedObj))->click_sound, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL); // 播放點擊聲音
         al_rest(0.15);

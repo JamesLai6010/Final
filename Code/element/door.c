@@ -68,7 +68,7 @@ void Door_draw(Elements *self) {
 void Door_destroy(Elements *self) {
     Door *Obj = ((Door *)(self->pDerivedObj));
     al_destroy_bitmap(Obj->img1);
-    al_destroy_bitmap(Obj->img1);
+    al_destroy_bitmap(Obj->img2);
     al_destroy_sample(Obj->mp3);
     free(Obj);
     free(self);
