@@ -36,6 +36,7 @@ Scene *New_Menu(int label)
 }
 void menu_update(Scene *self)
 {
+    printf("%f  %f\n",mouse.x,mouse.y);
     //left click
     if (mouse_state[1] && mouse.x >= 813 && mouse.x <= 1112 && mouse.y >= 497 && mouse.y <= 574) //start
     {
@@ -55,6 +56,11 @@ void menu_update(Scene *self)
         al_rest(0.1);
         self->scene_end = true;
         window = 3;
+    } else if (mouse_state[1] && mouse.x >= 1540 && mouse.x <= 1830 && mouse.y >= 950 && mouse.y <= 1010) {
+        al_play_sample(((Menu *)(self->pDerivedObj))->click_sound, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL); // 播放點擊聲音
+        al_rest(0.1);
+        self->scene_end = true;
+        window = 12;  //menu
     }
     return;
 }

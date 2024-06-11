@@ -11,6 +11,7 @@
 #include "gamescene4.h"
 #include "gamescene5.h"
 #include "victoryscene.h"
+#include "creditscene.h"
 Scene *scene = NULL;
 
 void create_scene(SceneType type)
@@ -74,6 +75,11 @@ void create_scene(SceneType type)
         fflush(stdout);
         scene = New_VictoryScene(VictoryScene_L);
         printf("Creating VictoryScene_L\n");
+        break;
+    case Credits_L:
+        fflush(stdout);
+        scene = New_CreditScene(Credits_L);
+        printf("Creating Credits_L\n");
         break;
     default:
         printf("Unknown SceneType\n");

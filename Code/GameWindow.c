@@ -158,6 +158,9 @@ bool game_update(Game *self)
         case 11:
             create_scene(VictoryScene_L);
             break;
+        case 12:
+            create_scene(Credits_L);
+            break;
         case -1:
             return false;
         default:
