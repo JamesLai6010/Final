@@ -4,11 +4,18 @@
 #include "../element/element.h"
 #include "../element/charater.h"
 #include "../element/floor4.h"
+#include "../element/speed.h"
 #include "../element/teleport.h"
 #include "../element/tree.h"
 #include "../element/projectile.h"
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include "../global.h"
+#include "../element/healer.h"
+#include "../element/trap.h"
+#include "../element/jump.h"
+#include "../element/slowtrap.h"
+#include "../element/meteor.h"
 /*
    [game scene object]
 */
@@ -19,8 +26,12 @@ typedef enum EleType4
     Tree_L4,
     Character_L4,
     Projectile_L4,
-    Speed_L4,
-    Healer_L4
+    Speed_L4 = 11,
+    Healer_L4 = 21,
+    Trap_L4 = 31,
+    Jump_L4 = 41,
+    SlowTrap_L4 = 51,
+    Meteor_L4 = 61
 } EleType4;
 typedef struct _GameScene4
 {

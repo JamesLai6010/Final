@@ -35,6 +35,14 @@ extern int JUMP_STRENGTH;
 extern int immortal;
 extern bool speed;
 extern bool heal;
-extern bool jump;
+extern bool jump_boost;
 extern float speed_timer;
+extern float jump_timer;
+extern float slow_timer;
+extern bool slow;
+extern int meteor_fall_speed;
+extern int meteor_spawn_timer;
+extern int next_meteor_time;
+//extern int speed_x;
+//extern int speed_y;
 #endif

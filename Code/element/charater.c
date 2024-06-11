@@ -24,7 +24,7 @@ void CheckDeath(Elements *self);
 
 Elements *New_Character(int label)
 {
-    printf("New_Charater\n\n");
+    //printf("New_Charater\n\n");
     //chara_health = 50;
     Character *pDerivedObj = (Character *)malloc(sizeof(Character));
     Elements *pObj = New_Elements(label);
@@ -82,17 +82,19 @@ int left_speed,right_speed;
 int section;
 int sec;
 int X;
+int JUMP_STRENGTH;
 
 void Character_update(Elements *self) {
     
     Character *chara = ((Character *)(self->pDerivedObj));
+    
     Character_on_Floor(self);  // 去算地面高度
     CheckDeath(self); // 檢查角色是否死亡
     // 如果有跳就去做重力
     //printf("%d %d  ", X,sec); // 地面y高度
     chara_x = chara -> x;
     chara_y = chara -> y;
-    printf("%d %d\n",chara->x,chara_x);
+    //printf("%d %d\n",chara->x,chara_x);
     if (speed) {
         speed_timer -= 1.0 / 60; //60 FPS = 1s
         if (speed_timer <= 0) {
@@ -100,6 +102,32 @@ void Character_update(Elements *self) {
             speed_timer = 5;
         }
     }
+
+    if (jump_boost) {
+        JUMP_STRENGTH = -40;
+        jump_timer -= 1.0 / 60;
+        if (jump_timer <= 0) {
+            jump_boost = false;
+            jump_timer = 3;
+        }
+    } else JUMP_STRENGTH = -28;
+    
+    int left_slow_speed;
+    int right_slow_speed;
+
+    if (slow) {
+        left_slow_speed = 3;
+        right_slow_speed = -3;
+        slow_timer -= 1.0 / 60;
+        if (slow_timer <= 0) {
+            slow = false;
+            slow_timer = 5;
+        }
+    } else {
+        left_slow_speed = 0;
+        right_slow_speed = 0;
+    }
+
     int effective_left_speed = speed ? left_speed * 2 : left_speed;
     int effective_right_speed = speed ? right_speed * 2 : right_speed;
 
@@ -148,12 +176,12 @@ void Character_update(Elements *self) {
         } else if (key_state[ALLEGRO_KEY_A]) {
             chara->dir = false;
             chara->state = MOVE;
-            _Character_update_position(self, effective_left_speed, 0);
+            _Character_update_position(self, effective_left_speed+left_slow_speed, 0);
             //printf("Moving left: speed %d\n", left_speed);
         } else if (key_state[ALLEGRO_KEY_D]) {
             chara->dir = true;
             chara->state = MOVE;
-            _Character_update_position(self, effective_right_speed, 0);
+            _Character_update_position(self, effective_right_speed+right_slow_speed, 0);
             //printf("Moving right: speed %d\n", right_speed);
         } else {
             chara->state = STOP;
@@ -183,11 +211,11 @@ void Character_update(Elements *self) {
         if (key_state[ALLEGRO_KEY_A]) {
             chara->dir = false;
             chara->state = MOVE;
-            _Character_update_position(self, effective_left_speed, 0);
+            _Character_update_position(self, effective_left_speed+left_slow_speed, 0);
         } else if (key_state[ALLEGRO_KEY_D]) {
             chara->dir = true;
             chara->state = MOVE;
-            _Character_update_position(self, effective_right_speed, 0);
+            _Character_update_position(self, effective_right_speed+right_slow_speed, 0);
         }
     }
 }
@@ -279,13 +307,14 @@ void Character_on_Floor(Elements *self) {
     sec = X/per_width;
     
     //現在的地面高度
-    if (sec < 27 && sec >= 1)  stop_y = floor_y[sec-1]*per_height;
+    if (immortal) stop_y = HEIGHT-140;
+    else if (sec < 27 && sec >= 1)  stop_y = floor_y[sec-1]*per_height;
     else if(sec >= 27){
         stop_y = floor_y[26]*per_height;
     }
     else{
         stop_y = floor_y[0]*per_height;
-    }
+    }   
     //下個block的地面高度
     if (sec < 27)  next_stop_y = floor_y[sec]*per_height;
     else next_stop_y = stop_y;
@@ -312,7 +341,7 @@ void CheckDeath(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
 
     // 檢查 y 座標是否超過最大值 or 沒血了
-    if (chara->y + chara->height >= 1050 || chara->health <= 0) {
+    if (chara->y + chara->height >= 1050 || chara_health <= 0) {
         game_over = true; 
     } else game_over = false;
     //if (sec == 20) chara_health-= 50;

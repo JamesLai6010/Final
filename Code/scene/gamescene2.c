@@ -1,47 +1,102 @@
 #include "gamescene2.h"
+#include <stdlib.h>
+#include <time.h>  
+#include "../global.h"
 /*
-   [GameScene function]
+   [GameScene2 function]
 */
+bool registed2;
+
 Scene *New_GameScene2(int label)
 {
+    registed2 = false;
+    end_time = 0;
     game_over = 0;
     printf("GameScene2 creating\n");
     GameScene2 *pDerivedObj = (GameScene2 *)malloc(sizeof(GameScene2));
     Scene *pObj = New_Scene(label);
     // font
     pDerivedObj->font = al_load_ttf_font("assets/font/SuperMarioBros.ttf", 50, 0);
-    pDerivedObj->game_time = 0; // 初始化時間
-    // setting derived object member
-    pDerivedObj->background = al_load_bitmap("assets/image/back.jpg");
+    // Load the heart gif
     pDerivedObj->heart_gif = algif_load_animation("assets/image/heart.gif");
     pDerivedObj->song = al_load_sample("assets/sound/gamescene.mp3");
-    
+
     al_reserve_samples(20);
     pDerivedObj->sample_instance = al_create_sample_instance(pDerivedObj->song);
+
+    pDerivedObj->game_time = 0; // 初始化時間
+    //pDerivedObj->game_over = false;
+    // setting derived object member
+    pDerivedObj->background = al_load_bitmap("assets/image/back.jpg");
     pObj->pDerivedObj = pDerivedObj;
     // register element
     _Register_elements(pObj, New_Floor2(Floor_L2));
-    //_Register_elements(pObj, New_Teleport(Teleport_L));
-    //_Register_elements(pObj, New_Tree(Tree_L)); //先取消這些東西 之後改成道具 陷阱 傳送
+    //_Register_elements(pObj, New_Teleport2(Teleport_L2));
+    
+    //_Register_elements(pObj, New_Tree2(Tree_L2)); //先取消這些東西 之後改成道具 陷阱 傳送
     _Register_elements(pObj, New_Character(Character_L2));
-    _Register_elements(pObj, New_Speed(Speed_L2));
-    _Register_elements(pObj, New_Heal(Healer_L));
+    //_Register_elements(pObj, New_Heal2(Healer_L2));
+    //_Register_elements(pObj, New_Trap2(Trap_L2));
+    //_Register_elements(pObj, New_Jump2(Jump_L2));
+    //_Register_elements(pObj, New_SlowTrap2(SlowTrap_L2));
+
     // Loop the song until the display closes
     al_set_sample_instance_playmode(pDerivedObj->sample_instance, ALLEGRO_PLAYMODE_LOOP);
     al_restore_default_mixer();
     al_attach_sample_instance_to_mixer(pDerivedObj->sample_instance, al_get_default_mixer());
     al_set_sample_instance_gain(pDerivedObj->sample_instance, 0.5);
-
     // setting derived object function
     pObj->Update = game_scene2_update;
     pObj->Draw = game_scene2_draw;
     pObj->Destroy = game_scene2_destroy;
     return pObj;
 }
+
 void game_scene2_update(Scene *self)
 {
     //GameScene2 *gs = ((GameScene2 *)(self->pDerivedObj));
-    
+    if (!registed2) {
+        int k1 = 0;
+        int k2 = 0;
+        int k3 = 0;
+        int k4 = 0;
+        int k5 = 0;
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 27; j++) {
+                if (map_data[i][j] == 2) {
+                    _Register_elements(self, New_Speed(Speed_L2+k1, j*70, i*70));
+                    k1++;
+                } else if (map_data[i][j] == 3) {
+                    _Register_elements(self, New_Heal(Healer_L2+k2, j*70, i*70));
+                    k2++;
+                } else if (map_data[i][j] == 4) {
+                    _Register_elements(self, New_Jump(Jump_L2+k3, j*70, i*70));
+                    k3++;
+                } else if (map_data[i][j] == 5) {
+                    _Register_elements(self, New_Trap(Trap_L2+k4, j*70, i*70));
+                    k4++;
+                } else if (map_data[i][j] == 6) {
+                    _Register_elements(self, New_SlowTrap(SlowTrap_L2+k5, j*70, i*70));
+                    k5++;
+                }
+            }
+        }
+        registed2 = true;
+    }
+    // 隕石生成邏輯
+    meteor_spawn_timer++;
+    int k0 = 0;
+    if (meteor_spawn_timer >= next_meteor_time && k0 <= 30) {
+        _Register_elements(self, New_Meteor(Meteor_L+k0, 0,0));
+        k0++;
+        meteor_spawn_timer = 0;
+        if (window == 1) next_meteor_time = rand() % 200; // 隨機生成下一次隕石生成時間
+        else if (window == 4) next_meteor_time = rand() % 180;
+        else if (window == 6) next_meteor_time = rand() % 150;
+        else if (window == 7) next_meteor_time = rand() % 100;
+        else if (window == 8) next_meteor_time = rand() % 60;
+    }
+
     // update every element
     ElementVec allEle = _Get_all_elements(self);
     for (int i = 0; i < allEle.len; i++)
@@ -51,22 +106,23 @@ void game_scene2_update(Scene *self)
         {
             Character *chara = (Character *)(ele->pDerivedObj);
             chara->current_map = 1;
-            if(chara->x < -70){       //身體一半在牆內
+            if (chara->x < -70) {  //身體一半在牆內
                 self->scene_end = true;
                 chara_x = 1800;
                 window = 1;
+                
                 printf("Change to scene 1\n");
                 return;
-            }
-            if((chara->x >= 1850)){       //身體一半在牆內
+            } else if (chara->x >= 1850) {
                 self->scene_end = true;
                 chara_x = -50;
                 window = 6;
-                printf("Change to scene 3\n");
+                printf("Change to scene 4\n");
                 return;
             }
         }
     }
+
     for (int i = 0; i < allEle.len; i++)
     {
         allEle.arr[i]->Update(allEle.arr[i]);
@@ -103,9 +159,8 @@ void game_scene2_update(Scene *self)
         if (ele->dele)
             _Remove_elements(self, ele);
     }
-    
-
 }
+
 void game_scene2_draw(Scene *self)
 {
     al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -115,20 +170,35 @@ void game_scene2_draw(Scene *self)
     for (int i = 0; i < allEle.len; i++)
     {
         Elements *ele = allEle.arr[i];
-        ele->Draw(ele);
+        if (!ele->dele) 
+        {
+            ele->Draw(ele);
+        }
     }
     // show_time
     int minutes = (int)game_time / 60;
     int seconds = (int)game_time % 60;
     int speed_min = (int)speed_timer / 60;
     int speed_sec = (int)speed_timer % 60;
+    int jump_min = (int)jump_timer / 60;
+    int jump_sec = (int)jump_timer % 60;
+    int slow_min = (int)slow_timer / 60;
+    int slow_sec = (int)slow_timer % 60;
+    char time_text[50], speed_time_text[50], jump_time_text[50], slow_time_text[50];
 
-    char time_text[50],speed_time_text[50];
     sprintf(time_text, "Time: %02d:%02d", minutes, seconds);
     al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 30, ALLEGRO_ALIGN_LEFT, time_text);
     if (speed) {
         sprintf(speed_time_text, "Speeded: %02d:%02d", speed_min, speed_sec);
         al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 80, ALLEGRO_ALIGN_LEFT, speed_time_text);
+    }
+    if (jump_boost) {
+        sprintf(jump_time_text, "Jump Boosted: %02d:%02d", jump_min, jump_sec);
+        al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 130, ALLEGRO_ALIGN_LEFT, jump_time_text);
+    }
+    if (slow) {
+        sprintf(slow_time_text, "Slowed: %02d:%02d", slow_min, slow_sec);
+        al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 180, ALLEGRO_ALIGN_LEFT, slow_time_text);
     }
     ALLEGRO_BITMAP *heart_frame = algif_get_bitmap(gs->heart_gif, al_get_time());
     if (heart_frame) {
@@ -157,4 +227,5 @@ void game_scene2_destroy(Scene *self)
     al_destroy_sample(Obj->song);
     free(Obj);
     free(self);
+    printf("gameScene2 destroy finishing\n");
 }

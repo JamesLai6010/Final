@@ -1,7 +1,7 @@
 #ifndef TELEPORT_H_INCLUDED
 #define TELEPORT_H_INCLUDED
 #include "element.h"
-#include "../scene/gamescene.h" // for element label
+#include "../scene/gamescene5.h" // for element label
 #include "charater.h"
 #include <stdbool.h>
 /*

@@ -6,18 +6,19 @@
    [heal function]
 */
 
-Elements *New_Heal(int label)
+Elements *New_Heal(int label, int x, int y)
 {
     Heal *pDerivedObj = (Heal *)malloc(sizeof(Heal));
     Elements *pObj = New_Elements(label);
     // setting derived object member
     pDerivedObj->img = al_load_bitmap("assets/image/gemRed.png");
+    pDerivedObj->mp3 = al_load_sample("assets/sound/bubble.mp3");
     pDerivedObj->width = al_get_bitmap_width(pDerivedObj->img);
     pDerivedObj->height = al_get_bitmap_height(pDerivedObj->img);
 
     pDerivedObj->picked = false;
-    pDerivedObj->x = 0;
-    pDerivedObj->y = 0;
+    pDerivedObj->x = x;
+    pDerivedObj->y = y;
     pDerivedObj->activate = false;
     // setting the interact object
     pObj->inter_obj[pObj->inter_len++] = Character_L;
@@ -58,7 +59,9 @@ void Heal_interact(Elements *self, Elements *tar)
             chara->y <= Obj->y+70 && Obj->picked == false)
         {
             // Heal the character
-            chara_health = chara->max_health;
+            al_play_sample(Obj->mp3, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+            if (chara_health <= 80) chara_health += 20;
+            else chara_health = 100;
             Obj->picked = true;
             self->dele = true;
             // Make the item disappear
@@ -69,19 +72,7 @@ void Heal_interact(Elements *self, Elements *tar)
 void Heal_draw(Elements *self)
 {
     Heal *Obj = ((Heal *)(self->pDerivedObj));
-    for (int i = 0; i < 15; i++)
-    {
-        for (int j = 0; j < 27; j++)
-        {
-            if (map_data[i][j] == 11) // Assuming map_data value 7 represents a heal item
-            {
-                // Update item position
-                Obj->x = j * Obj->width;
-                Obj->y = i * Obj->height;
-                al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
-            }
-        }
-    }
+    al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
 }
 
 void Heal_destory(Elements *self)

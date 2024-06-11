@@ -1,25 +1,26 @@
 #include "speed.h"
 #include <stdbool.h>
 #include <stdio.h>
-
+#include "../global.h"
 /*
    [teleport function]
 */
-
-Elements *New_Speed(int label)
+bool draw;
+Elements *New_Speed(int label, int x, int y)
 {
-    
+    draw = false;
     Speed *pDerivedObj = (Speed *)malloc(sizeof(Speed));
     Elements *pObj = New_Elements(label);
     // setting derived object member
     pDerivedObj->img = al_load_bitmap("assets/image/gemBlue.png");
+    pDerivedObj->mp3 = al_load_sample("assets/sound/bubble.mp3");
     pDerivedObj->width = al_get_bitmap_width(pDerivedObj->img);
     pDerivedObj->height = al_get_bitmap_height(pDerivedObj->img);
 
     pDerivedObj->picked = false;
     //_Teleport_load_map(pDerivedObj);
-    pDerivedObj->x = 0;
-    pDerivedObj->y = 0;
+    pDerivedObj->x = x;
+    pDerivedObj->y = y;
     pDerivedObj->activate = false;
     // setting the interact object
     pObj->inter_obj[pObj->inter_len++] = Character_L;
@@ -62,6 +63,7 @@ void Speed_interact(Elements *self, Elements *tar)
             chara->y <= Obj->y+70 && Obj->picked == false)
         {
             //printf("kkkk\n");
+            al_play_sample(Obj->mp3, 0.1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             speed_timer = 5;
             speed = true;
             Obj->picked = true;
@@ -74,19 +76,9 @@ void Speed_interact(Elements *self, Elements *tar)
 void Speed_draw(Elements *self)
 {
     Speed *Obj = ((Speed *)(self->pDerivedObj));
-    for (int i = 0; i < 15; i++)
-    {
-        for (int j = 0; j < 27; j++)
-        {
-            if (map_data[i][j] == 6)
-            {
-                // 更新道具位置
-                Obj->x = j * Obj->width;
-                Obj->y = i * Obj->height;
-                al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
-            }
-        }
-    }
+        al_draw_bitmap(Obj->img, Obj->x, Obj->y, 0);
+        //Obj->x = speed_x;
+        //Obj->y = speed_y;
 }
 
 void Speed_destory(Elements *self)

@@ -1,9 +1,14 @@
 #include "gamescene3.h"
+#include <stdlib.h>
+#include <time.h>  
 /*
    [GameScene function]
 */
+bool registed;
+
 Scene *New_GameScene3(int label)
 {
+    registed = false;
     game_over = 0;
     printf("GameScene3 creating\n");
     GameScene3 *pDerivedObj = (GameScene3 *)malloc(sizeof(GameScene3));
@@ -24,8 +29,8 @@ Scene *New_GameScene3(int label)
     //_Register_elements(pObj, New_Teleport(Teleport_L));
     //_Register_elements(pObj, New_Tree(Tree_L)); //先取消這些東西 之後改成道具 陷阱 傳送
     _Register_elements(pObj, New_Character(Character_L3));
-    _Register_elements(pObj, New_Speed(Speed_L3));
-    _Register_elements(pObj, New_Heal(Healer_L));
+    //_Register_elements(pObj, New_Speed(Speed_L3));
+    //_Register_elements(pObj, New_Heal(Healer_L));
     // Loop the song until the display closes
     al_set_sample_instance_playmode(pDerivedObj->sample_instance, ALLEGRO_PLAYMODE_LOOP);
     al_restore_default_mixer();
@@ -41,7 +46,47 @@ Scene *New_GameScene3(int label)
 void game_scene3_update(Scene *self)
 {
     //GameScene2 *gs = ((GameScene2 *)(self->pDerivedObj));
-    
+    if (!registed) {
+        int k1 = 0;
+        int k2 = 0;
+        int k3 = 0;
+        int k4 = 0;
+        int k5 = 0;
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 27; j++) {
+                if (map_data[i][j] == 2) {
+                    _Register_elements(self, New_Speed(Speed_L3+k1, j*70, i*70));
+                    k1++;
+                } else if (map_data[i][j] == 3) {
+                    _Register_elements(self, New_Heal(Healer_L3+k2, j*70, i*70));
+                    k2++;
+                } else if (map_data[i][j] == 4) {
+                    _Register_elements(self, New_Jump(Jump_L3+k3, j*70, i*70));
+                    k3++;
+                } else if (map_data[i][j] == 5) {
+                    _Register_elements(self, New_Trap(Trap_L3+k4, j*70, i*70));
+                    k4++;
+                } else if (map_data[i][j] == 6) {
+                    _Register_elements(self, New_SlowTrap(SlowTrap_L3+k5, j*70, i*70));
+                    k5++;
+                }
+            }
+        }
+        registed = true;
+    }
+    // 隕石生成邏輯
+    meteor_spawn_timer++;
+    int k0 = 0;
+    if (meteor_spawn_timer >= next_meteor_time && k0 <= 30) {
+        _Register_elements(self, New_Meteor(Meteor_L+k0, 0,0));
+        k0++;
+        meteor_spawn_timer = 0;
+        if (window == 1) next_meteor_time = rand() % 200; // 隨機生成下一次隕石生成時間
+        else if (window == 4) next_meteor_time = rand() % 180;
+        else if (window == 6) next_meteor_time = rand() % 150;
+        else if (window == 7) next_meteor_time = rand() % 100;
+        else if (window == 8) next_meteor_time = rand() % 60;
+    }
     // update every element
     ElementVec allEle = _Get_all_elements(self);
     for (int i = 0; i < allEle.len; i++)
@@ -122,13 +167,25 @@ void game_scene3_draw(Scene *self)
     int seconds = (int)game_time % 60;
     int speed_min = (int)speed_timer / 60;
     int speed_sec = (int)speed_timer % 60;
+    int jump_min = (int)jump_timer / 60;
+    int jump_sec = (int)jump_timer % 60;
+    int slow_min = (int)slow_timer / 60;
+    int slow_sec = (int)slow_timer % 60;
+    char time_text[50],speed_time_text[50],jump_time_text[50],slow_time_text[50];
 
-    char time_text[50],speed_time_text[50];
     sprintf(time_text, "Time: %02d:%02d", minutes, seconds);
     al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 30, ALLEGRO_ALIGN_LEFT, time_text);
     if (speed) {
         sprintf(speed_time_text, "Speeded: %02d:%02d", speed_min, speed_sec);
         al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 80, ALLEGRO_ALIGN_LEFT, speed_time_text);
+    }
+    if (jump_boost) {
+        sprintf(jump_time_text, "Jump Boosted: %02d:%02d", jump_min, jump_sec);
+        al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 130, ALLEGRO_ALIGN_LEFT, jump_time_text);
+    }
+    if (slow) {
+        sprintf(slow_time_text, "Slowed: %02d:%02d", slow_min, slow_sec);
+        al_draw_text(gs->font, al_map_rgb(255, 255, 255), 40, 180, ALLEGRO_ALIGN_LEFT, slow_time_text);
     }
     ALLEGRO_BITMAP *heart_frame = algif_get_bitmap(gs->heart_gif, al_get_time());
     if (heart_frame) {
