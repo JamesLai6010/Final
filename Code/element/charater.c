@@ -87,7 +87,7 @@ int JUMP_STRENGTH;
 void Character_update(Elements *self) {
     
     Character *chara = ((Character *)(self->pDerivedObj));
-    if (immortal) chara_health = 500;
+
     Character_on_Floor(self);  // 去算地面高度
     CheckDeath(self); // 檢查角色是否死亡
     // 如果有跳就去做重力
@@ -341,7 +341,7 @@ void CheckDeath(Elements *self) {
     Character *chara = ((Character *)(self->pDerivedObj));
 
     // 檢查 y 座標是否超過最大值 or 沒血了
-    if (chara->y + chara->height >= 1050 || chara_health <= 0) {
+    if ((chara->y + chara->height >= 1050 || chara_health <= 0) && !immortal) {
         game_over = true; 
     } else game_over = false;
     //if (sec == 20) chara_health-= 50;
