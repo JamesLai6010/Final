@@ -17,6 +17,7 @@
 #include "../element/slowtrap.h"
 #include "../element/meteor.h"
 #include "../element/door.h"
+
 /*
    [game scene object]
 */

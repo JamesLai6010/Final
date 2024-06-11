@@ -290,7 +290,7 @@ void Character_on_Floor(Elements *self) {
     {
         for (int j = 0; j < 15; j++)
         {
-            if (map_data[j][i] == 1) {
+            if (map_data[j][i] == 1 || map_data[j][i] == 9) {
                 floor_y[i] = j;
                 break;
             }

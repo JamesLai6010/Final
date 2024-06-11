@@ -3,16 +3,17 @@
 /*
    [teleport function]
 */
-Elements *New_Teleport(int label)
+Elements *New_Teleport(int label,int x,int y)
 {
+    printf("Teleport creating\n");
     Teleport *pDerivedObj = (Teleport *)malloc(sizeof(Teleport));
     Elements *pObj = New_Elements(label);
     // setting derived object member
-    pDerivedObj->img = al_load_bitmap("assets/image/teleport.png");
+    pDerivedObj->img = al_load_bitmap("assets/image/stoneMid.jpg");
     pDerivedObj->width = al_get_bitmap_width(pDerivedObj->img);
     pDerivedObj->height = al_get_bitmap_height(pDerivedObj->img);
-    pDerivedObj->x = WIDTH - pDerivedObj->width;
-    pDerivedObj->y = HEIGHT - pDerivedObj->height;
+    pDerivedObj->x = x;
+    pDerivedObj->y = y;
     pDerivedObj->activate = false;
     // setting the interact object
     pObj->inter_obj[pObj->inter_len++] = Character_L;
@@ -27,7 +28,7 @@ Elements *New_Teleport(int label)
 void Teleport_update(Elements *self)
 {
     Teleport *Obj = ((Teleport *)(self->pDerivedObj));
-    if (key_state[ALLEGRO_KEY_W])
+    if (key_state[ALLEGRO_KEY_E])
     {
         Obj->activate = true;
     }
@@ -42,11 +43,11 @@ void Teleport_interact(Elements *self, Elements *tar)
     {
         Character *chara = (Character *)(tar->pDerivedObj);
         Teleport *Obj = (Teleport *)(self->pDerivedObj);
-        if (chara->x >= Obj->x &&
-            chara->x <= Obj->x + Obj->width &&
+        if (chara->x >= Obj->x - 70 && chara->x <= Obj->x && 
+            chara->y + chara->height >= Obj->y-20 && chara->y + chara->height <= Obj->y+20 &&
             Obj->activate)
         {
-            _Character_update_position(tar, 0 - chara->x, 0);
+            _Character_update_position(tar, -17*70, -200);
         }
     }
 }

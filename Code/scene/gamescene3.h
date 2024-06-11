@@ -16,6 +16,8 @@
 #include "../element/jump.h"
 #include "../element/slowtrap.h"
 #include "../element/meteor.h"
+
+
 /*
    [game scene object]
 */

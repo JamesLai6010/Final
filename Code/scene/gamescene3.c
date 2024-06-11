@@ -81,11 +81,11 @@ void game_scene3_update(Scene *self)
         _Register_elements(self, New_Meteor(Meteor_L+k0, 0,0));
         k0++;
         meteor_spawn_timer = 0;
-        if (window == 1) next_meteor_time = rand() % 200; // 隨機生成下一次隕石生成時間
-        else if (window == 4) next_meteor_time = rand() % 180;
-        else if (window == 6) next_meteor_time = rand() % 150;
-        else if (window == 7) next_meteor_time = rand() % 100;
-        else if (window == 8) next_meteor_time = rand() % 60;
+        if (window == 1) next_meteor_time = rand() % 180; // 隨機生成下一次隕石生成時間
+        else if (window == 4) next_meteor_time = rand() % 150;
+        else if (window == 6) next_meteor_time = rand() % 120;
+        else if (window == 7) next_meteor_time = rand() % 90;
+        else if (window == 8) next_meteor_time = rand() % 30;
     }
     key_spawn_timer++;
     int k6 = 0;
